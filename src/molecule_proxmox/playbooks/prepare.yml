@@ -1,5 +1,5 @@
 ---
-- name: Wait for instances
+- name: Prepare
   hosts: all
   gather_facts: no
   tasks:

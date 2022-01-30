@@ -30,9 +30,10 @@ templates.  You will need to create one or more templates.
 Templates have the following requirements.
 
 * networking configured
-* qemu-guest-agent must be installed and enabled
-* the ssh server must be installed
-* the template must include an Ansible user account
+* Python installed for Ansible
+* qemu-guest-agent installed and enabled in Proxmox
+* ssh server installed
+* user account for Ansible
 * An ssh public key must be added to the ``authorized_keys`` for the Ansible user account.
 * If a non-root user is used for the Ansible user (recommended), that user should be
   added to the sudoers. (This is not needed for the driver, but will likely be needed

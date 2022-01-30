@@ -43,8 +43,11 @@ lint: init
 	$(YAMLLINT) tests/molecule/*/*.yml
 	$(PYTHON) setup.py -q checkdocs
 
-check test: init lint
-	. .venv/bin/activate && pytest -v $(T) tests
+test: init lint
+	$(PYTEST) -v -s
+
+check: init lint
+	$(PYTEST) -v
 
 sdist: init
 	$(PYTHON) setup.py sdist

@@ -28,6 +28,14 @@
         loop_var: vm
       register: proxmox_clone
 
+    # Hack Alert: Sometimes the proxmox_kvm module seems to get the state of the
+    # vm wrong, and falsely thinks the vm is already running so fails to start
+    # it after the clone. This delay seems to help, but is only a workaround for
+    # now.  A retry loop should be implemented (in proxmox_qemu_agent?)
+    - name: "Wait for clone to finish?"
+      pause:
+        seconds: 10
+
     - name: "Start molecule instance(s)."
       proxmox_kvm:
         api_host: "{{ api_host | d(molecule_yml.driver.options.api_host) | d(omit) }}"
@@ -59,13 +67,15 @@
     - name: "Populate instance configs."
       set_fact:
         instance_config:
-          instance: "{{ item.vm.name }}"
-          address: "{{ item.vm.addresses[0] }}"
+          instance: "{{ vm.name }}"
+          address: "{{ vm.addresses[0] }}"
           user: "{{ molecule_yml.driver.options.ssh_user | d('molecule') }}"
           port: 22
           identity_file: "{{ molecule_yml.driver.options.ssh_identity_file }}"
-          vmid: "{{ item.vm.vmid }}"
-      loop: "{{ qemu_query.results }}"
+          vmid: "{{ vm.vmid }}"
+      loop: "{{ qemu_query.results | map(attribute='vm') }}"
+      loop_control:
+        loop_var: vm
       register: instance_configs
 
     - name: "Write instance configs."
