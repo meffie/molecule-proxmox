@@ -14,6 +14,7 @@ driver:
     node: "morty"
     ssh_user: "molecule"
     ssh_identity_file: "${HOME}/.ssh/id_rsa"
+    clone_delay: 2
 platforms:
   - name: m01
     template_vmid: 9000
