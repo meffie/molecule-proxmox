@@ -18,7 +18,7 @@
         api_password: "{{ api_password | d(molecule_yml.driver.options.api_password) | d(omit) }}"
         api_token_id: "{{ api_token_id | d(molecule_yml.driver.options.api_token_id) | d(omit) }}"
         api_token_secret: "{{ api_token_secret | d(molecule_yml.driver.options.api_token_secret) | d(omit) }}"
-        vmid: "{{ vm.template_vmid }}"
+        vmid: "{{ vm.template_vmid | d(molecule_yml.driver.options.default_template_vmid) | d(9000) }}"
         clone: "{{ vm.name }}"
         name: "{{ vm.name }}"
         node: "{{ molecule_yml.driver.options.node }}"
