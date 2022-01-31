@@ -32,9 +32,8 @@
     # vm wrong, and falsely thinks the vm is already running so fails to start
     # it after the clone. This delay seems to help, but is only a workaround for
     # now.  A retry loop should be implemented (in proxmox_qemu_agent?)
-    - name: "Wait for clone to finish?"
-      pause:
-        seconds: 10
+    - name: "Wait for clone to finish."
+      command: sleep 10
 
     - name: "Start molecule instance(s)."
       proxmox_kvm:
