@@ -43,6 +43,8 @@ def test_molecule_init_scenario(tmpdir):
 
 def test_molecule_test():
     print('')
-    project_directory = pathlib.Path(__file__).resolve().parent
-    with chdir(project_directory):
+    testdir = pathlib.Path(__file__).resolve().parent
+    projectdir = testdir / 'proxmox_driver'
+    with chdir(projectdir):
         molecule('test')
+        molecule('reset')

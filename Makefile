@@ -40,7 +40,7 @@ lint: init
 	$(PYFLAKES) src/*/*.py
 	$(PYFLAKES) tests/*.py
 	$(YAMLLINT) src/*/playbooks/*.yml
-	$(YAMLLINT) tests/molecule/*/*.yml
+	$(YAMLLINT) tests/*/molecule/*/*.yml
 	$(PYTHON) setup.py -q checkdocs
 
 test: init lint
