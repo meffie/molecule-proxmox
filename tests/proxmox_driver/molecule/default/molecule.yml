@@ -15,10 +15,15 @@ driver:
     ssh_user: "molecule"
     ssh_identity_file: "${HOME}/.ssh/id_rsa"
     clone_delay: 2
+    box2vmid:
+      "generic/alma8": 9000
+
 platforms:
   - name: m01
     template_vmid: 9000
   - name: m02
     template_vmid: 9000
+  - name: m03
+    box: generic/alma8
 provisioner:
   name: ansible
