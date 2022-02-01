@@ -130,7 +130,6 @@ def run_module():
                 interfaces = reply['result']
                 addresses = get_addresses(interfaces)
                 if addresses:
-                    result['vm']['interfaces'] = interfaces
                     result['vm']['addresses'] = addresses
                     break
         except Exception as e:
