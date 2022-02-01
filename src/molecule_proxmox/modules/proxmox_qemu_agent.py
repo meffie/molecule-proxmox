@@ -13,13 +13,7 @@ DOCUMENTATION = r"""
 ---
 module: proxmox_qemu_agent
 
-short_description: todo
-
-description:
-  - todo
-requirements:
-
-options:
+short_description: Query the qemu guest agent to find the IP addresses of a running vm.
 
 author:
   - Michael Meffie (@meffie)
@@ -40,6 +34,9 @@ from ansible.module_utils.basic import AnsibleModule
 
 
 def get_vm(module, proxmox, vmid):
+    """
+    Look up a vm by id, and fail if not found.
+    """
     vm_list = [vm for vm in proxmox.cluster.resources.get(type='vm') if vm['vmid'] == int(vmid)]
     if len(vm_list) == 0:
         module.fail_json(vmid=vmid, msg='VM with vmid = %s not found' % vmid)
@@ -84,7 +81,9 @@ def get_addresses(interfaces):
 
 def run_module():
     """
-    todo
+    Lookup the IP addresses on a running vm with the qemu guest agent.
+    Since the guest may still be booting and acquiring an address with
+    DHCP, retry until we find at least one address, or timeout.
     """
     result = dict(
         changed=False,
