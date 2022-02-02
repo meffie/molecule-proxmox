@@ -39,6 +39,19 @@ Templates have the following requirements.
   added to the sudoers. (This is not needed for the driver, but will likely be needed
   for the ``converge`` playbook.)
 
+Installation
+============
+
+The ``molecule-proxmox`` plugin may be installed with Python ``pip``. A virtualenv
+is recommended.  The following commands install Anisble, Molecule, and the
+Molecule Proxmox plugin in a virtualenv called ``venv``.
+
+.. code-block:: bash
+
+    $ python3 -m venv venv
+    $ source venv/bin/activate
+    $ pip3 install molecule[ansible] molecule-proxmox
+
 
 Example
 =======
