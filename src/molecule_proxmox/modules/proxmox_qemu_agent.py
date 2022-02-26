@@ -120,16 +120,18 @@ def run_module():
 
     retries = 20
     while retries > 0:
+        syslog.syslog("retries remaining %d" % retries)
         try:
             vm = get_vm(module, proxmox, vmid)
             result['vm'] = vm
             reply = proxmox.nodes(vm['node']).qemu(vmid).agent.get('network-get-interfaces')
-            syslog.syslog("reply: %s" % pprint.pformat(reply, compact=True))
+            syslog.syslog("reply: %s" % reply)
             if 'result' in reply:
                 interfaces = reply['result']
                 addresses = get_addresses(interfaces)
                 if addresses:
                     result['vm']['addresses'] = addresses
+                    syslog.syslog("got addresses %s" % addresses)
                     break
         except Exception as e:
             syslog.syslog("Exception type %s" % type(e))
