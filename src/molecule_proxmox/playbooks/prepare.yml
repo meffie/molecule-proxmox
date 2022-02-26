@@ -3,5 +3,5 @@
   hosts: all
   gather_facts: no
   tasks:
-    - name: Waiting for system to start.
+    - name: Waiting for ssh connection(s).
       wait_for_connection:
