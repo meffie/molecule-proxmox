@@ -43,7 +43,7 @@ Installation
 ============
 
 The ``molecule-proxmox`` plugin may be installed with Python ``pip``. A virtualenv
-is recommended.  The following commands install Anisble, Molecule, and the
+is recommended.  The following commands install Ansible, Molecule, and the
 Molecule Proxmox plugin in a virtualenv called ``venv``.
 
 .. code-block:: bash
@@ -106,6 +106,42 @@ Example
        template_vmid: 9000
      - name: test02
        template_vmid: 9000
+
+Development
+===========
+
+To checkout the source code:
+
+    $ git clone https://github.com/meffie/molecule-proxmox
+    $ cd molecule-proxmox
+
+A `Makefile` is provided to facilitate development and testing. A Python
+virtualenv environment may be created with the `init` target.
+
+    $ make init
+    $ source .venv/bin/activate
+
+Export the following shell environment variables to run the unit tests.
+
+    export PROXMOX_SECRETS=<proxmox secrets yaml file path>
+    export PROXMOX_NODE=<proxmox node name>
+    export PROXMOX_SSH_USER=<username>
+    export PROXMOX_SSH_IDENTITY_FILE=<ssh key file for username>
+
+The secrets file should contain the proxmox login credentials, either the
+username and password, or a Proxmox API token id and value.  This file should
+be encrypted with `ansible-vault`. The ssh user and identity file should match
+the user and public key installed when the virtual machine template was
+created.
+
+To run the unit tests in verbose mode:
+
+    $ make test
+
+To run the unit tests in quiet mode:
+
+    $ make check
+
 
 Authors
 =======
