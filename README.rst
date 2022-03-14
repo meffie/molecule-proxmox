@@ -127,6 +127,7 @@ Export the following shell environment variables to run the unit tests.
     export PROXMOX_NODE=<proxmox node name>
     export PROXMOX_SSH_USER=<username>
     export PROXMOX_SSH_IDENTITY_FILE=<ssh key file for username>
+    export PROXMOX_TEMPLATE_VMID=<template vmid to be cloned>
 
 The secrets file should contain the proxmox login credentials, either the
 username and password, or a Proxmox API token id and value.  This file should
