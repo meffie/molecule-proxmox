@@ -67,6 +67,7 @@ Example
         node: pve01
         ssh_user: tester
         ssh_identity_file: /path/to/id_rsa
+        sethostname: yes
    platforms:
      - name: test01
        template_vmid: 9000
@@ -90,6 +91,7 @@ Example
        template_vmid: 9000
      - name: test02
        template_vmid: 9000
+       sethostname: no
 
 .. code-block:: yaml
 

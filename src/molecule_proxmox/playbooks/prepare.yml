@@ -3,5 +3,14 @@
   hosts: all
   gather_facts: no
   tasks:
-    - name: Waiting for ssh connection(s).
+    - name: "Waiting for instance ssh connection."
       wait_for_connection:
+
+    - name: "Set instance hostname."
+      become: yes
+      hostname:
+        name: "{{ vm.hostname | d(vm.name) }}"
+      loop: "{{ molecule_yml.platforms }}"
+      loop_control:
+        loop_var: vm
+      when: vm.sethostname | d(molecule_yml.driver.options.sethostname | d('yes')) | bool
