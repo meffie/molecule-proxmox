@@ -9,8 +9,5 @@
     - name: "Set instance hostname."
       become: yes
       hostname:
-        name: "{{ vm.hostname | d(vm.name) }}"
-      loop: "{{ molecule_yml.platforms }}"
-      loop_control:
-        loop_var: vm
-      when: vm.sethostname | d(molecule_yml.driver.options.sethostname | d('yes')) | bool
+        name: "{{ proxmox_hostname | d(inventory_hostname) }}"
+      when: proxmox_sethostname | d(molecule_yml.driver.options.sethostname | d('yes')) | bool
