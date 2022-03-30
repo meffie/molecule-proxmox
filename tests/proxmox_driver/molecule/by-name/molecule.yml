@@ -1,0 +1,34 @@
+---
+dependency:
+  name: galaxy
+driver:
+  name: proxmox
+  options:
+    # Creds file path. May be encrypted with ansible-vault.
+    proxmox_secrets: "${PROXMOX_SECRETS}"
+    #api_host: "*********"
+    #api_user: "*********"
+    #api_password: "********"
+    #api_token_id: "********"
+    #api_token_secret: "*******************************"
+    node: "${PROXMOX_NODE}"
+    ssh_user: "${PROXMOX_SSH_USER}"
+    ssh_identity_file: "${PROXMOX_SSH_IDENTITY_FILE}"
+    # Default template name. Defaults to 'molecule' if not set.
+    template_name: "${PROXMOX_TEMPLATE_NAME}"
+    clone_delay: 2
+
+platforms:
+  # Uses the default template name.
+  - name: m01
+
+  # Instance specific template name.
+  - name: m02
+    proxmox_template_name: "${PROXMOX_TEMPLATE_NAME}"
+
+  # Instance specific template name with alternate keyword.
+  - name: m03
+    template_name: "${PROXMOX_TEMPLATE_NAME}"
+
+provisioner:
+  name: ansible

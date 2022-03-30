@@ -7,7 +7,6 @@
     - community.general
   vars:
       options: "{{ molecule_yml.driver.options }}"
-      box2vmid: "{{ molecule_yml.driver.options.box2vmid | d({}) }}"
   tasks:
     - name: "Load proxmox secrets."
       include_vars: "{{ options.proxmox_secrets }}"
@@ -21,8 +20,8 @@
         api_password: "{{ api_password | d(options.api_password) | d(omit) }}"
         api_token_id: "{{ api_token_id | d(options.api_token_id) | d(omit) }}"
         api_token_secret: "{{ api_token_secret | d(options.api_token_secret) | d(omit) }}"
-        vmid: "{{ vm.template_vmid | d(box2vmid.get(vm.box|d(''), 0)) }}"
-        clone: "{{ vm.name }}"
+        vmid: "{{ vm.proxmox_template_vmid | d(vm.template_vmid, true) | d(omit, true) }}"
+        clone: "{{ vm.proxmox_template_name | d(vm.template_name, true) | d(options.template_name, true) | d('molecule', true) }}"
         name: "{{ vm.name }}"
         node: "{{ options.node }}"
         timeout: 300

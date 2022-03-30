@@ -9,11 +9,15 @@ driver:
     node: "${PROXMOX_NODE}"
     ssh_user: "${PROXMOX_SSH_USER}"
     ssh_identity_file: "${PROXMOX_SSH_IDENTITY_FILE}"
-    template_name: "${PROXMOX_TEMPLATE_NAME}"
     clone_delay: 2
 
 platforms:
   - name: m01
+    proxmox_template_vmid: ${PROXMOX_TEMPLATE_VMID:-9000}
+
+  - name: m02
+    # Alias keyword, for compatibility with old versions.
+    template_vmid: ${PROXMOX_TEMPLATE_VMID:-9000}
 
 provisioner:
   name: ansible

@@ -6,6 +6,7 @@ import contextlib
 import os
 import pathlib
 import subprocess
+import pytest
 
 
 @contextlib.contextmanager
@@ -40,11 +41,11 @@ def test_molecule_init_scenario(tmpdir):
         os.system('tree')
         assert pathlib.Path('molecule/default/INSTALL.rst').exists()
 
-
-def test_molecule_test():
+@pytest.mark.parametrize('scenario', ['default', 'by-name', 'by-vmid'])
+def test_molecule_test(scenario):
     print('')
     testdir = pathlib.Path(__file__).resolve().parent
     projectdir = testdir / 'proxmox_driver'
     with chdir(projectdir):
-        molecule('test')
+        molecule('test', '--scenario-name', scenario)
         molecule('reset')

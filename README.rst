@@ -67,12 +67,13 @@ Example
         node: pve01
         ssh_user: tester
         ssh_identity_file: /path/to/id_rsa
+        template_name: debian11
         sethostname: yes
    platforms:
      - name: test01
-       template_vmid: 9000
+       template_name: debian11
      - name: test02
-       template_vmid: 9000
+       template_name: alma8
 
 .. code-block:: yaml
 
@@ -86,11 +87,10 @@ Example
         node: pve01
         ssh_user: tester
         ssh_identity_file: /path/to/id_rsa
+        template_name: debian11
    platforms:
      - name: test01
-       template_vmid: 9000
      - name: test02
-       template_vmid: 9000
        sethostname: no
 
 .. code-block:: yaml
@@ -103,11 +103,10 @@ Example
         node: pve01
         ssh_user: tester
         ssh_identity_file: /path/to/id_rsa
+        template_name: debian11
    platforms:
      - name: test01
-       template_vmid: 9000
      - name: test02
-       template_vmid: 9000
 
 Development
 ===========
@@ -129,7 +128,8 @@ Export the following shell environment variables to run the unit tests.
     export PROXMOX_NODE=<proxmox node name>
     export PROXMOX_SSH_USER=<username>
     export PROXMOX_SSH_IDENTITY_FILE=<ssh key file for username>
-    export PROXMOX_TEMPLATE_VMID=<template vmid to be cloned>
+    export PROXMOX_TEMPLATE_VMID=<template vmid to be cloned in by-vmid scenario>
+    export PROXMOX_TEMPLATE_NAME=<template name to be cloned in by-name scenario>
 
 The secrets file should contain the proxmox login credentials, either the
 username and password, or a Proxmox API token id and value.  This file should
