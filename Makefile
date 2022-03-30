@@ -38,6 +38,7 @@ init: .venv
 
 lint: init
 	$(PYFLAKES) src/*/*.py
+	$(PYFLAKES) src/*/modules/*.py
 	$(PYFLAKES) tests/*.py
 	$(YAMLLINT) src/*/playbooks/*.yml
 	$(YAMLLINT) tests/*/molecule/*/*.yml

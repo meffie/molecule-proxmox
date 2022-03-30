@@ -15,6 +15,7 @@
 
     - name: "Create molecule instance(s)."
       proxmox_kvm:
+        state: present
         api_host: "{{ api_host | d(options.api_host) | d(omit) }}"
         api_user: "{{ api_user | d(options.api_user) | d(omit) }}"
         api_password: "{{ api_password | d(options.api_password) | d(omit) }}"
@@ -30,29 +31,7 @@
         loop_var: vm
       register: proxmox_clone
 
-    # Hack Alert: Sometimes the proxmox_kvm module seems to get the state of the
-    # vm wrong, and falsely thinks the vm is already running so fails to start
-    # it after the clone. This delay seems to help, but is only a workaround for
-    # now.  A retry loop should be implemented (in proxmox_qemu_agent?)
-    - name: "Wait for clone."
-      command: "sleep {{ options.clone_delay | d(10) }}"
-
     - name: "Start molecule instance(s)."
-      proxmox_kvm:
-        api_host: "{{ api_host | d(options.api_host) | d(omit) }}"
-        api_user: "{{ api_user | d(options.api_user) | d(omit) }}"
-        api_password: "{{ api_password | d(options.api_password) | d(omit) }}"
-        api_token_id: "{{ api_token_id | d(options.api_token_id) | d(omit) }}"
-        api_token_secret: "{{ api_token_secret | d(options.api_token_secret) | d(omit) }}"
-        vmid: "{{ vmid }}"
-        state: started
-        timeout: 300
-      loop: "{{ proxmox_clone.results | map(attribute='vmid') }}"
-      loop_control:
-        loop_var: vmid
-      register: proxmox_start
-
-    - name: "Wait for instance(s) to start."
       proxmox_qemu_agent:
         api_host: "{{ api_host | d(options.api_host) | d(omit) }}"
         api_user: "{{ api_user | d(options.api_user) | d(omit) }}"
@@ -60,7 +39,7 @@
         api_token_id: "{{ api_token_id | d(options.api_token_id) | d(omit) }}"
         api_token_secret: "{{ api_token_secret | d(options.api_token_secret) | d(omit) }}"
         vmid: "{{ vmid }}"
-      loop: "{{ proxmox_start.results | map(attribute='vmid') }}"
+      loop: "{{ proxmox_clone.results | map(attribute='vmid') }}"
       loop_control:
         loop_var: vmid
       register: qemu_query

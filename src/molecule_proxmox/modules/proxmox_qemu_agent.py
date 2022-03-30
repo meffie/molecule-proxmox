@@ -27,9 +27,9 @@ RETURN = r"""
 
 import time
 import syslog
-import pprint
 
 from proxmoxer import ProxmoxAPI
+from proxmoxer.core import ResourceException
 from ansible.module_utils.basic import AnsibleModule
 
 
@@ -45,7 +45,67 @@ def get_vm(module, proxmox, vmid):
     return vm_list[0]
 
 
-def get_addresses(interfaces):
+def start_vm(module, proxmox, vm):
+    """
+    Start the vm and wait until the start task completes.
+    """
+    vmid = vm['vmid']
+    proxmox_node = proxmox.nodes(vm['node'])
+    timeout = 300
+
+    syslog.syslog('Starting vmid {0}'.format(vmid))
+    taskid = proxmox_node.qemu(vm['vmid']).status.start.post()
+    while timeout:
+        task = proxmox_node.tasks(taskid).status.get()
+        if task['status'] == 'stopped' and task['exitstatus'] == 'OK':
+            time.sleep(1)  # Delay for API
+            return
+        timeout = timeout - 1
+        if timeout == 0:
+            break
+        time.sleep(1)
+    lastlog = proxmox_node.tasks(taskid).log.get()[:1]
+    msg = 'Timeout while starting vmid {0}: {1}'.format(vmid, lastlog)
+    syslog.syslog(msg)
+    module.fail_json(msg=msg)
+
+
+def query_vm(module, proxmox, vm):
+    """
+    Query the QEMU guest agent to get the current IP address(es).
+    """
+    vmid = vm['vmid']
+    proxmox_node = proxmox.nodes(vm['node'])
+    timeout = 300
+
+    syslog.syslog('Waiting for vmid {0} IP address'.format(vmid))
+    while timeout:
+        reply = None
+        try:
+            reply = proxmox_node.qemu(vmid).agent.get('network-get-interfaces')
+            # syslog.syslog('network-get-interfaces: {0}'.format(reply))
+        except ResourceException as e:
+            if e.status_code == 500 and 'VM {0} is not running'.format(vmid) in e.content:
+                start_vm(module, proxmox, vm)
+            elif e.status_code == 500 and 'QEMU guest agent is not running' in e.content:
+                pass  # Waiting for guest agent to start.
+            else:
+                module.fail_json(msg=str(e))
+        if reply and 'result' in reply:
+            addresses = i2a(reply['result'])
+            if len(addresses) > 0:
+                return addresses   # Found at least one address.
+        timeout = timeout - 1
+        if timeout == 0:
+            break
+        time.sleep(1)
+
+    msg = 'Timeout while waiting for vmid {0} IP address'.format(vmid)
+    syslog.syslog(msg)
+    module.fail_json(msg=msg)
+
+
+def i2a(interfaces):
     """
     Extract the non-loopback IPv4 addresses from network-get-interfaces results.
 
@@ -64,7 +124,7 @@ def get_addresses(interfaces):
             ...
         ]}]
 
-        get_addresses(interface)
+        i2a(interface)
         ['192.168.136.85']
 
     """
@@ -116,29 +176,16 @@ def run_module():
         auth_args['token_name'] = api_token_id
         auth_args['token_value'] = api_token_secret
 
+    # API Login
     proxmox = ProxmoxAPI(api_host, verify_ssl=validate_certs, **auth_args)
 
-    retries = 20
-    while retries > 0:
-        syslog.syslog("retries remaining %d" % retries)
-        try:
-            vm = get_vm(module, proxmox, vmid)
-            result['vm'] = vm
-            reply = proxmox.nodes(vm['node']).qemu(vmid).agent.get('network-get-interfaces')
-            syslog.syslog("reply: %s" % reply)
-            if 'result' in reply:
-                interfaces = reply['result']
-                addresses = get_addresses(interfaces)
-                if addresses:
-                    result['vm']['addresses'] = addresses
-                    syslog.syslog("got addresses %s" % addresses)
-                    break
-        except Exception as e:
-            syslog.syslog("Exception type %s" % type(e))
-            syslog.syslog(str(e))
-            pass
-        retries -= 1
-        time.sleep(5)
+    # Lookup the vm by id.
+    vm = get_vm(module, proxmox, vmid)
+    result['vm'] = vm
+
+    # Wait for at least one IP address.
+    addresses = query_vm(module, proxmox, vm)
+    result['vm']['addresses'] = addresses
 
     module.exit_json(**result)
 

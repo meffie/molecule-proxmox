@@ -10,7 +10,6 @@ driver:
     ssh_user: "${PROXMOX_SSH_USER}"
     ssh_identity_file: "${PROXMOX_SSH_IDENTITY_FILE}"
     template_name: "${PROXMOX_TEMPLATE_NAME}"
-    clone_delay: 2
 
 platforms:
   - name: m01
