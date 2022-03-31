@@ -39,7 +39,7 @@
         vmid: "{{ vm.vmid }}"
         node: "{{ options.node }}"
         force: yes
-        timeout: 300
+        timeout: "{{ options.timeout | d(omit) }}"
       loop: "{{ lookup('file', molecule_instance_config) | from_yaml }}"
       loop_control:
         loop_var: vm

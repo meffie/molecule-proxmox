@@ -51,7 +51,7 @@ def start_vm(module, proxmox, vm):
     """
     vmid = vm['vmid']
     proxmox_node = proxmox.nodes(vm['node'])
-    timeout = 300
+    timeout = module.params['timeout']
 
     syslog.syslog('Starting vmid {0}'.format(vmid))
     taskid = proxmox_node.qemu(vm['vmid']).status.start.post()
@@ -76,7 +76,7 @@ def query_vm(module, proxmox, vm):
     """
     vmid = vm['vmid']
     proxmox_node = proxmox.nodes(vm['node'])
-    timeout = 300
+    timeout = module.params['timeout']
 
     syslog.syslog('Waiting for vmid {0} IP address'.format(vmid))
     while timeout:
@@ -157,6 +157,7 @@ def run_module():
             api_token_secret=dict(type='str', no_log=True),
             validate_certs=dict(type='bool', default=False),
             vmid=dict(type='int', required=True),
+            timeout=dict(type='int', default=300),
         ),
         required_together=[('api_token_id', 'api_token_secret')],
         required_one_of=[('api_password', 'api_token_id')],

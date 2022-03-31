@@ -25,7 +25,7 @@
         clone: "{{ vm.proxmox_template_name | d(vm.template_name, true) | d(options.template_name, true) | d('molecule', true) }}"
         name: "{{ vm.name }}"
         node: "{{ options.node }}"
-        timeout: 300
+        timeout: "{{ options.timeout | d(omit) }}"
       loop: "{{ molecule_yml.platforms }}"
       loop_control:
         loop_var: vm
@@ -39,6 +39,7 @@
         api_token_id: "{{ api_token_id | d(options.api_token_id) | d(omit) }}"
         api_token_secret: "{{ api_token_secret | d(options.api_token_secret) | d(omit) }}"
         vmid: "{{ vmid }}"
+        timeout: "{{ options.timeout | d(omit) }}"
       loop: "{{ proxmox_clone.results | map(attribute='vmid') }}"
       loop_control:
         loop_var: vmid

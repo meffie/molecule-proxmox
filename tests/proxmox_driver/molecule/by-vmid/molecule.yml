@@ -9,6 +9,7 @@ driver:
     node: "${PROXMOX_NODE}"
     ssh_user: "${PROXMOX_SSH_USER}"
     ssh_identity_file: "${PROXMOX_SSH_IDENTITY_FILE}"
+    timeout: 120
 
 platforms:
   - name: m01

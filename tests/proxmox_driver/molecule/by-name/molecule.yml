@@ -16,6 +16,7 @@ driver:
     ssh_identity_file: "${PROXMOX_SSH_IDENTITY_FILE}"
     # Default template name. Defaults to 'molecule' if not set.
     template_name: "${PROXMOX_TEMPLATE_NAME}"
+    timeout: 120
 
 platforms:
   # Uses the default template name.
