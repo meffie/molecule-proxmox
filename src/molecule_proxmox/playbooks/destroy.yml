@@ -36,10 +36,11 @@
         api_token_id: "{{ api_token_id | d(options.api_token_id) | d(omit) }}"
         api_token_secret: "{{ api_token_secret | d(options.api_token_secret) | d(omit) }}"
         state: absent
-        vmid: "{{ vm.vmid }}"
+        vmid: "{{ i.vmid }}"
         node: "{{ options.node }}"
         force: yes
         timeout: "{{ options.timeout | d(omit) }}"
       loop: "{{ lookup('file', molecule_instance_config) | from_yaml }}"
       loop_control:
-        loop_var: vm
+        loop_var: i
+        label: "{{ i.instance, i.vmid }}"

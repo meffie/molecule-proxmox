@@ -147,6 +147,8 @@ def run_module():
     """
     result = dict(
         changed=False,
+        vmid=0,
+        addresses=[],
     )
     module = AnsibleModule(
         argument_spec=dict(
@@ -181,12 +183,13 @@ def run_module():
     proxmox = ProxmoxAPI(api_host, verify_ssl=validate_certs, **auth_args)
 
     # Lookup the vm by id.
+    time.sleep(1)    # Delay for API since we just cloned this instance.
     vm = get_vm(module, proxmox, vmid)
-    result['vm'] = vm
 
     # Wait for at least one IP address.
     addresses = query_vm(module, proxmox, vm)
-    result['vm']['addresses'] = addresses
+    result['vmid'] = vmid
+    result['addresses'] = addresses
 
     module.exit_json(**result)
 

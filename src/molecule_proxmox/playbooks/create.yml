@@ -21,14 +21,15 @@
         api_password: "{{ api_password | d(options.api_password) | d(omit) }}"
         api_token_id: "{{ api_token_id | d(options.api_token_id) | d(omit) }}"
         api_token_secret: "{{ api_token_secret | d(options.api_token_secret) | d(omit) }}"
-        vmid: "{{ vm.proxmox_template_vmid | d(vm.template_vmid, true) | d(omit, true) }}"
-        clone: "{{ vm.proxmox_template_name | d(vm.template_name, true) | d(options.template_name, true) | d('molecule', true) }}"
-        name: "{{ vm.name }}"
+        vmid: "{{ p.proxmox_template_vmid | d(p.template_vmid, true) | d(omit, true) }}"
+        clone: "{{ p.proxmox_template_name | d(p.template_name, true) | d(options.template_name, true) | d('molecule', true) }}"
+        name: "{{ p.name }}"
         node: "{{ options.node }}"
         timeout: "{{ options.timeout | d(omit) }}"
       loop: "{{ molecule_yml.platforms }}"
       loop_control:
-        loop_var: vm
+        loop_var: p
+        label: "{{ p.name }}"
       register: proxmox_clone
 
     - name: "Start molecule instance(s)."
@@ -38,28 +39,33 @@
         api_password: "{{ api_password | d(options.api_password) | d(omit) }}"
         api_token_id: "{{ api_token_id | d(options.api_token_id) | d(omit) }}"
         api_token_secret: "{{ api_token_secret | d(options.api_token_secret) | d(omit) }}"
-        vmid: "{{ vmid }}"
+        vmid: "{{ rc.vmid }}"
         timeout: "{{ options.timeout | d(omit) }}"
-      loop: "{{ proxmox_clone.results | map(attribute='vmid') }}"
+      loop: "{{ proxmox_clone.results }}"
       loop_control:
-        loop_var: vmid
-      register: qemu_query
+        loop_var: rc
+        label: "{{ rc.p.name, rc.vmid }}"
+      register: proxmox_qemu_agent
 
     - name: "Populate instance configs."
       set_fact:
         instance_config:
-          instance: "{{ vm.name }}"
-          address: "{{ vm.addresses[0] }}"
+          instance: "{{ ra.rc.p.name }}"
+          address: "{{ ra.addresses[0] }}"
           user: "{{ options.ssh_user | d('molecule') }}"
           port: 22
           identity_file: "{{ options.ssh_identity_file }}"
-          vmid: "{{ vm.vmid }}"
-      loop: "{{ qemu_query.results | map(attribute='vm') }}"
+          vmid: "{{ ra.vmid }}"
+      loop: "{{ proxmox_qemu_agent.results }}"
       loop_control:
-        loop_var: vm
+        loop_var: ra
+        label: "{{ ra.rc.p.name, ra.vmid, ra.addresses[0] }}"
       register: instance_configs
+
+    - set_fact:
+        instance_configs: "{{ instance_configs.results | map(attribute='ansible_facts.instance_config') | list }}"
 
     - name: "Write instance configs."
       copy:
-        content: "{{ instance_configs.results | map(attribute='ansible_facts.instance_config') | to_nice_yaml }}"
+        content: "{{ instance_configs | to_nice_yaml }}"
         dest: "{{ molecule_instance_config }}"
