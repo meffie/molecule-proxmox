@@ -13,16 +13,40 @@ DOCUMENTATION = r"""
 ---
 module: proxmox_qemu_agent
 
-short_description: Query the qemu guest agent to find the IP addresses of a running vm.
+short_description: Query the QEMU guest agent to find the IP addresses of a running vm.
+
+description:
+  - Start the vm if it is currently not running and wait until at least one non-loopback
+    IP address is detected.
+
+  - Fails when an IP address is not found within the timeout value.
 
 author:
   - Michael Meffie (@meffie)
 """
 
 EXAMPLES = r"""
+- name: Start instance
+  proxmox_qemu_agent:
+    api_host: pve
+    api_user: admin
+    api_password: ********
+    vmid: 100
+    timeout: 300
 """
 
 RETURN = r"""
+vmid:
+  description: vmid of target virtual machine
+  returned: always
+  type: int
+  sample: 100
+
+addresses:
+  decription: list of one or more IPv4 addresses
+  returned: always
+  type: list
+  sample: ['192.168.136.123']
 """
 
 import time
@@ -110,22 +134,33 @@ def i2a(interfaces):
     Extract the non-loopback IPv4 addresses from network-get-interfaces results.
 
     Example:
-        interfaces = [
-            {'hardware-address': '6e:25:bb:c7:4b:76',
-             'name': 'ens18',
-             'ip-addresses': [
-                {'ip-address': '192.168.136.176', 'ip-address-type': 'ipv4', 'prefix': 24},
-                {'ip-address': 'fe80::6c25:bbff:fec7:4b76', 'ip-address-type': 'ipv6', 'prefix': 64},
-             ]
-             ...
-            },
-            {'hardware-address': '00:00:00:00:00:00',
-             'name': 'lo',
-            ...
-        ]}]
 
-        i2a(interface)
-        ['192.168.136.85']
+        reply = {'results': [
+          {
+            'name': 'ens18',
+            'hardware-address': '6e:25:bb:c7:4b:76',
+            'ip-addresses': [
+              {
+                'ip-address-type': 'ipv4',
+                'ip-address': '192.168.136.176',
+                ...
+              },
+              {
+                'ip-address-type': 'ipv6',
+                'ip-address': 'fe80::6c25:bbff:fec7:4b76',
+                ...
+              }
+            ]
+            ...
+          },
+          {
+            'name': 'lo',
+            'hardware-address': '00:00:00:00:00:00',
+        ...
+        }
+
+        i2a(reply['results'])
+        ['192.168.136.176']
 
     """
     addrs = []
