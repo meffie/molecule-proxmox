@@ -113,16 +113,22 @@ Development
 
 To checkout the source code:
 
+.. code-block:: bash
+
     $ git clone https://github.com/meffie/molecule-proxmox
     $ cd molecule-proxmox
 
 A `Makefile` is provided to facilitate development and testing. A Python
 virtualenv environment may be created with the `init` target.
 
+.. code-block:: bash
+
     $ make init
     $ source .venv/bin/activate
 
 Export the following shell environment variables to run the unit tests.
+
+.. code-block:: bash
 
     export PROXMOX_SECRETS=<proxmox secrets yaml file path>
     export PROXMOX_NODE=<proxmox node name>
@@ -139,9 +145,13 @@ created.
 
 To run the unit tests in verbose mode:
 
+.. code-block:: bash
+
     $ make test
 
 To run the unit tests in quiet mode:
+
+.. code-block:: bash
 
     $ make check
 
