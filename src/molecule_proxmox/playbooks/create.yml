@@ -22,7 +22,7 @@
         api_token_id: "{{ api_token_id | d(options.api_token_id) | d(omit) }}"
         api_token_secret: "{{ api_token_secret | d(options.api_token_secret) | d(omit) }}"
         vmid: "{{ p.proxmox_template_vmid | d(p.template_vmid, true) | d(omit, true) }}"
-        clone: "{{ p.proxmox_template_name | d(p.template_name, true) | d(options.template_name, true) | d('molecule', true) }}"
+        clone: "{{ p.proxmox_template_name | d(p.template_name, true) | d(options.template_name, true) | d(p.box, true) | d('molecule', true) }}"
         name: "{{ p.name }}"
         node: "{{ options.node }}"
         timeout: "{{ options.timeout | d(omit) }}"
