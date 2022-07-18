@@ -1,0 +1,8 @@
+# Requirements for development.
+ansible
+pyflakes
+pylint
+yamllint
+pytest
+collective.checkdocs
+twine

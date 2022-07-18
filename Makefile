@@ -28,10 +28,8 @@ help:
 
 .venv:
 	$(PYTHON3) -m venv .venv
-	$(PIP) install -U pip
-	$(PIP) install wheel
-	$(PIP) install pyflakes pylint yamllint pytest collective.checkdocs twine
-	$(PIP) install molecule[ansible]
+	$(PIP) install -U pip wheel
+	$(PIP) install -r requirements.txt
 	$(PIP) install -e .
 
 init: .venv
