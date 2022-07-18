@@ -29,7 +29,7 @@ def molecule(command, *args):
 def test_molecule_init_role(tmpdir):
     print('')
     with chdir(tmpdir):
-        molecule('init', 'role', 'myrole', '--driver-name', 'proxmox')
+        molecule('init', 'role', 'acme.myrole', '--driver-name', 'proxmox')
         os.system('tree')
         assert pathlib.Path('myrole/molecule/default/INSTALL.rst').exists()
 
