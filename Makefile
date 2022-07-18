@@ -9,6 +9,7 @@ PYFLAKES=$(BIN)/pyflakes
 YAMLLINT=$(BIN)/yamllint
 PYTEST=$(BIN)/pytest
 TWINE=$(BIN)/twine
+BASH=/bin/bash
 
 help:
 	@echo "usage: make <target>"
@@ -43,10 +44,10 @@ lint: init
 	$(PYTHON) setup.py -q checkdocs
 
 test: init lint
-	$(PYTEST) -v -s
+	$(BASH) -c 'source $(BIN)/activate && $(PYTEST) -v -s'
 
 check: init lint
-	$(PYTEST) -v
+	$(BASH) -c 'source $(BIN)/activate && $(PYTEST) -v'
 
 sdist: init
 	$(PYTHON) setup.py sdist
