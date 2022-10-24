@@ -27,7 +27,7 @@ setuptools.setup(
     },
     install_requires=[
         # molecule plugins are not allowed to mention Ansible as a direct dependency
-        'molecule>=3.2.0',
+        'molecule>=3.2.0,<=4.0.1',
         'pyyaml',
         'proxmoxer>=1.3.1',
     ],
