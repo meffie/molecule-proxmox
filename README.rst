@@ -108,6 +108,31 @@ Example
      - name: test01
      - name: test02
 
+.. code-block:: yaml
+
+   driver:
+     name: proxmox
+     options:
+        # Secrets file may be encrypted with ansible-vault.
+        proxmox_secrets: /path/to/proxmox_secrets.yml"
+        node: pve01
+        ssh_user: tester
+        ssh_identity_file: /path/to/id_rsa
+        template_name: debian11
+   platforms:
+     - name: test01
+       template_name: debian11
+       # Check https://docs.ansible.com/ansible/latest/collections/community/general/proxmox_kvm_module.html
+       # deeper explination of options
+       template_ciopts:
+        ipconfig:
+          ipconfig0: 'ip=192.168.0.2/24,gw=192.168.0.1'
+        ciuser: some_user
+        cipassword: some_password
+        nameservers:
+          - 192.169.0.245
+          
+
 Development
 ===========
 
