@@ -32,6 +32,31 @@
         label: "{{ p.name }}"
       register: proxmox_clone
 
+    - name: "Update molecule instance config(s)"
+      proxmox_kvm:
+        state: present
+        api_host: "{{ api_host | d(options.api_host) | d(omit) }}"
+        api_user: "{{ api_user | d(options.api_user) | d(omit) }}"
+        api_password: "{{ api_password | d(options.api_password) | d(omit) }}"
+        api_token_id: "{{ api_token_id | d(options.api_token_id) | d(omit) }}"
+        api_token_secret: "{{ api_token_secret | d(options.api_token_secret) | d(omit) }}"
+        name: "{{ p.name }}"
+        node: "{{ options.node }}"
+        timeout: "{{ options.timeout | d(omit) }}"
+        ciuser: "{{ p.proxmox_template_ciopts.ciuser | d(p.template_ciopts.ciuser, true) | d(omit, true) }}"
+        cipassword: "{{ p.proxmox_template_ciopts.cipassword | d(p.template_ciopts.cipassword, true) | d(omit, true) }}"
+        citype: "{{ p.proxmox_template_ciopts.citype | d(p.template_ciopts.citype, true) | d(omit, true) }}"
+        ipconfig: "{{ p.proxmox_template_ciopts.ipconfig | d(p.template_ciopts.ipconfig, true) | d(omit, true) }}"
+        nameservers: "{{ p.proxmox_template_ciopts.nameservers | d(p.template_ciopts.nameservers, true) | d(omit, true) }}"
+        searchdomains: "{{ p.proxmox_template_ciopts.searchdomains | d(p.template_ciopts.searchdomains, true) | d(omit, true) }}"
+        sshkeys: "{{ p.proxmox_template_ciopts.sshkeys | d(p.template_ciopts.sshkeys, true) | d(omit, true) }}"
+        update: true
+      when: p.proxmox_template_ciopts is defined or p.template_ciopts.ipconfig is defined
+      loop: "{{ molecule_yml.platforms }}"
+      loop_control:
+        loop_var: p
+        label: "{{ p.name }}"
+
     - name: "Start molecule instance(s)."
       proxmox_qemu_agent:
         api_host: "{{ api_host | d(options.api_host) | d(omit) }}"
