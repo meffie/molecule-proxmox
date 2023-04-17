@@ -41,7 +41,7 @@ def test_molecule_init_scenario(tmpdir):
         os.system('tree')
         assert pathlib.Path('molecule/default/INSTALL.rst').exists()
 
-@pytest.mark.parametrize('scenario', ['default', 'by-name', 'by-vmid'])
+@pytest.mark.parametrize('scenario', ['default', 'by-name', 'by-vmid', 'cloud-init'])
 def test_molecule_test(scenario):
     print('')
     testdir = pathlib.Path(__file__).resolve().parent

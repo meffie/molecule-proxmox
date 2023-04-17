@@ -29,6 +29,7 @@ templates.  You will need to create one or more templates.
 
 Templates have the following requirements.
 
+* A cloud-init drive if any cloud-init settings are used
 * networking configured
 * Python installed for Ansible
 * qemu-guest-agent installed and enabled in Proxmox
@@ -122,16 +123,14 @@ Example
    platforms:
      - name: test01
        template_name: debian11
-       # Check https://docs.ansible.com/ansible/latest/collections/community/general/proxmox_kvm_module.html
-       # deeper explination of options
-       template_ciopts:
-        ipconfig:
-          ipconfig0: 'ip=192.168.0.2/24,gw=192.168.0.1'
-        ciuser: some_user
-        cipassword: some_password
-        nameservers:
-          - 192.169.0.245
-          
+       # See https://docs.ansible.com/ansible/latest/collections/community/general/proxmox_kvm_module.html
+       # for cloud-init options.
+       ciuser: some_user
+       cipassword: some_password
+       ipconfig:
+         ipconfig0: 'ip=192.168.0.2/24,gw=192.168.0.1'
+       nameservers:
+         - 192.169.0.245
 
 Development
 ===========
