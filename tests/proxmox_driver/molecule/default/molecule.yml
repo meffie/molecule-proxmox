@@ -3,7 +3,7 @@ dependency:
   name: galaxy
 
 driver:
-  name: proxmox
+  name: molecule-proxmox
   options:
     proxmox_secrets: "${PROXMOX_SECRETS}"
     node: "${PROXMOX_NODE}"
