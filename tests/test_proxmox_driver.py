@@ -26,20 +26,14 @@ def molecule(command, *args):
     assert rc == 0
 
 
-def test_molecule_init_role(tmpdir):
-    print('')
-    with chdir(tmpdir):
-        molecule('init', 'role', 'acme.myrole', '--driver-name', 'proxmox')
-        os.system('tree')
-        assert pathlib.Path('myrole/molecule/default/INSTALL.rst').exists()
-
-
 def test_molecule_init_scenario(tmpdir):
     print('')
     with chdir(tmpdir):
-        molecule('init', 'scenario', '--driver-name', 'proxmox')
-        os.system('tree')
-        assert pathlib.Path('molecule/default/INSTALL.rst').exists()
+        molecule('init', 'scenario', '--driver-name', 'molecule-proxmox')
+        assert pathlib.Path('molecule/default/converge.yml').exists()
+        assert pathlib.Path('molecule/default/create.yml').exists()
+        assert pathlib.Path('molecule/default/destroy.yml').exists()
+        assert pathlib.Path('molecule/default/molecule.yml').exists()
 
 @pytest.mark.parametrize('scenario', ['default', 'by-name', 'by-vmid', 'cloud-init'])
 def test_molecule_test(scenario):
