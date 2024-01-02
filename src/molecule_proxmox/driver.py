@@ -50,7 +50,7 @@ class Proxmox(Driver):
 
     def __init__(self, config=None):
         super(Proxmox, self).__init__(config)
-        self._name = "proxmox"
+        self._name = "molecule-proxmox"
 
     @property
     def name(self):

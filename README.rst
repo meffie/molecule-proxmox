@@ -60,7 +60,7 @@ Example
 .. code-block:: yaml
 
    driver:
-     name: proxmox
+     name: molecule-proxmox
      options:
         api_host: pve01.example.com
         api_user: molecule
@@ -79,7 +79,7 @@ Example
 .. code-block:: yaml
 
    driver:
-     name: proxmox
+     name: molecule-proxmox
      options:
         api_host: pve01.example.com
         api_user: molecule
@@ -97,7 +97,7 @@ Example
 .. code-block:: yaml
 
    driver:
-     name: proxmox
+     name: molecule-proxmox
      options:
         # Secrets file may be encrypted with ansible-vault.
         proxmox_secrets: /path/to/proxmox_secrets.yml"
@@ -112,7 +112,7 @@ Example
 .. code-block:: yaml
 
    driver:
-     name: proxmox
+     name: molecule-proxmox
      options:
         # Secrets file may be encrypted with ansible-vault.
         proxmox_secrets: /path/to/proxmox_secrets.yml"
