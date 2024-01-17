@@ -1,76 +1,74 @@
-
-.PHONY: help init lint import test sdist wheel rpm deb upload clean distclean
+# Copyright 2020-2024 Sine Nomine Associates
+#
+# This is a helper makefile to run tox. Run tox directly if make is not
+# available:
+#
+#    $ python3 -m venv .venv
+#    $ source .venv/bin/activate
+#    (venv) $ pip install -U pip setuptools
+#    (venv) $ pip install tox
+#    (venv) $ tox
+#
 
 PYTHON3=python3
-BIN=.venv/bin
-PIP=$(BIN)/pip
-PYTHON=$(BIN)/python
-PYFLAKES=$(BIN)/pyflakes
-YAMLLINT=$(BIN)/yamllint
-PYTEST=$(BIN)/pytest
-TWINE=$(BIN)/twine
-BASH=/bin/bash
+PIP=.venv/bin/pip
+TOX=.venv/bin/tox
 
+.PHONY: help
 help:
 	@echo "usage: make <target>"
 	@echo ""
 	@echo "targets:"
-	@echo "  init       create python virtual env"
-	@echo "  lint       run linter"
-	@echo "  import     import external ansible roles"
-	@echo "  test       run tests"
-	@echo "  sdist      create source distribution"
-	@echo "  wheel      create wheel distribution"
-	@echo "  rpm        create rpm package"
-	@echo "  deb        create deb package"
-	@echo "  upload     upload to pypi.org"
+	@echo "  init       create python venv to run tox"
+	@echo "  lint       run lint checks"
+	@echo "  check      run quick tests"
+	@echo "  test       run all tests"
+	@echo "  docs       generate html docs"
+	@echo "  preview    local preview html docs"
+	@echo "  release    upload to pypi.org"
 	@echo "  clean      remove generated files"
-	@echo "  distclean  remove generated files and virtual env"
+	@echo "  distclean  remove generated files and venvs"
 
-.venv:
+.venv/bin/activate: Makefile
 	$(PYTHON3) -m venv .venv
-	$(PIP) install -U pip wheel
-	$(PIP) install -r requirements.txt
-	$(PIP) install -e .
+	$(PIP) install -U pip
+	$(PIP) install tox
+	touch .venv/bin/activate
 
-init: .venv
+.PHONY: init
+init: .venv/bin/activate
 
+.PHONY: lint
 lint: init
-	$(PYFLAKES) src/*/*.py
-	$(PYFLAKES) src/*/modules/*.py
-	$(PYFLAKES) tests/*.py
-	$(YAMLLINT) src/*/playbooks/*.yml
-	$(YAMLLINT) tests/*/molecule/*/*.yml
-	$(PYTHON) setup.py -q checkdocs
+	$(TOX) -e lint
 
-test: init lint
-	$(BASH) -c 'source $(BIN)/activate && $(PYTEST) -v -s'
+.PHONY: check
+check: lint
+	$(TOX) -e py312
 
-check: init lint
-	$(BASH) -c 'source $(BIN)/activate && $(PYTEST) -v'
+.PHONY: test
+test: lint
+	$(TOX)
 
-sdist: init
-	$(PYTHON) setup.py sdist
+.PHONY: docs
+docs: init
+	$(TOX) -e docs
 
-wheel: init
-	$(PYTHON) setup.py bdist_wheel
+.PHONY: preview
+preview: docs
+	xdg-open docs/build/html/index.html
 
-rpm: init
-	$(PYTHON) setup.py bdist_rpm
+.PHONY: release upload
+release upload: init
+	$(TOX) -e release
 
-deb: init
-	$(PYTHON) setup.py --command-packages=stdeb.command bdist_deb
-
-upload: init sdist wheel
-	$(TWINE) upload dist/*
-
+.PHONY: clean
 clean:
-	rm -rf .pytest_cache
-	rm -rf src/*/__pycache__
-	rm -rf tests/__pycache__
-	rm -rf tests/molecule/*/library/__pycache__/
+	rm -rf .pytest_cache src/*/__pycache__ tests/__pycache__
 	rm -rf build dist
-
-distclean: clean
 	rm -rf .eggs *.egg-info src/*.egg-info
-	rm -rf .venv
+	rm -rf docs/build
+
+.PHONY: reallyclean distclean
+reallyclean distclean: clean
+	rm -rf .config .venv .tox
