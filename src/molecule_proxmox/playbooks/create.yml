@@ -7,9 +7,8 @@
       options: "{{ molecule_yml.driver.options }}"
   tasks:
     - name: "Load proxmox secrets."
-      ansible.builtin.include_vars: "{{ options.proxmox_secrets }}"
+      ansible.builtin.include_tasks: tasks/secrets.yml
       when: options.proxmox_secrets is defined
-      no_log: true
 
     - name: "Create molecule instance(s)."
       community.general.proxmox_kvm:
