@@ -26,6 +26,13 @@ def molecule(command, *args):
     assert rc == 0
 
 
+def check_env(name):
+    """Verify test environment is set."""
+    value = os.environ.get(name)
+    assert value != None, f'{name} is not set'
+    assert value != '', f'{name} is empty'
+
+
 def test_molecule_init_scenario(tmpdir):
     print('')
     with chdir(tmpdir):
@@ -40,6 +47,16 @@ def test_molecule_init_scenario(tmpdir):
                            'default', 'by-name', 'by-vmid', 'cloud-init'])
 def test_molecule_test(scenario):
     print('')
+    check_env('PROXMOX_HOST')
+    check_env('PROXMOX_NODE')
+    check_env('PROXMOX_PASSWORD')
+    check_env('PROXMOX_SSH_IDENTITY_FILE')
+    check_env('PROXMOX_SSH_USER')
+    check_env('PROXMOX_TEMPLATE_NAME')
+    check_env('PROXMOX_TEMPLATE_VMID')
+    check_env('PROXMOX_TOKEN_ID')
+    check_env('PROXMOX_TOKEN_SECRET')
+    check_env('PROXMOX_USER')
     testdir = pathlib.Path(__file__).resolve().parent
     projectdir = testdir / 'proxmox_driver'
     with chdir(projectdir):
