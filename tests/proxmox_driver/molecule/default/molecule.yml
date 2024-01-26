@@ -5,7 +5,9 @@ dependency:
 driver:
   name: molecule-proxmox
   options:
-    proxmox_secrets: "${PROXMOX_SECRETS}"
+    api_host: "${PROXMOX_HOST}"
+    api_user: "${PROXMOX_USER}"
+    api_password: "${PROXMOX_PASSWORD}"
     node: "${PROXMOX_NODE}"
     ssh_user: "${PROXMOX_SSH_USER}"
     ssh_identity_file: "${PROXMOX_SSH_IDENTITY_FILE}"
