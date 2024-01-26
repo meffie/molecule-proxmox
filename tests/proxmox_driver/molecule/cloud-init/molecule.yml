@@ -13,8 +13,9 @@ driver:
     ssh_identity_file: "${PROXMOX_SSH_IDENTITY_FILE}"
 
 platforms:
-  - name: m01
+  - name: molecule-proxmox-01
     template_name: "${PROXMOX_TEMPLATE_NAME}"
+    # cloud-init options
     ciuser: tycobb
     cipassword: secret
     nameservers:

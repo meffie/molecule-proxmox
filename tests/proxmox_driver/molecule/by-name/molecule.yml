@@ -16,15 +16,15 @@ driver:
 
 platforms:
   # Uses the default template name.
-  - name: m01
+  - name: molecule-proxmox-01
 
   # Instance specific template name.
-  - name: m02
-    proxmox_template_name: "${PROXMOX_TEMPLATE_NAME}"
+  - name: molecule-proxmox-02
+    template_name: "${PROXMOX_TEMPLATE_NAME}"
 
   # Instance specific template name with alternate keyword.
-  - name: m03
-    template_name: "${PROXMOX_TEMPLATE_NAME}"
+  - name: molecule-proxmox-03
+    proxmox_template_name: "${PROXMOX_TEMPLATE_NAME}"
 
 provisioner:
   name: ansible

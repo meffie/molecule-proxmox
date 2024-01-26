@@ -11,10 +11,10 @@ driver:
     node: "${PROXMOX_NODE}"
     ssh_user: "${PROXMOX_SSH_USER}"
     ssh_identity_file: "${PROXMOX_SSH_IDENTITY_FILE}"
-    template_name: "${PROXMOX_TEMPLATE_NAME}"
 
 platforms:
-  - name: m01
+  - name: molecule-proxmox-01
+    template_name: "${PROXMOX_TEMPLATE_NAME}"
 
 provisioner:
   name: ansible

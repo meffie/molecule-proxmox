@@ -14,12 +14,12 @@ driver:
     timeout: 120
 
 platforms:
-  - name: m01
-    proxmox_template_vmid: ${PROXMOX_TEMPLATE_VMID:-9000}
-
-  - name: m02
-    # Alias keyword, for compatibility with old versions.
+  - name: molecule-proxmox-01
     template_vmid: ${PROXMOX_TEMPLATE_VMID:-9000}
+
+  - name: molecule-proxmox-02
+    # Alias keyword
+    proxmox_template_vmid: ${PROXMOX_TEMPLATE_VMID:-9000}
 
 provisioner:
   name: ansible
