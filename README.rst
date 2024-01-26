@@ -149,8 +149,8 @@ To checkout the source code:
     $ git clone https://github.com/meffie/molecule-proxmox
     $ cd molecule-proxmox
 
-A `Makefile` is provided to facilitate development and testing. A Python
-virtualenv environment may be created with the `init` target.
+A `Makefile` and `tox.ini` are provided to facilitate development and testing.
+A Python virtualenv environment may be created with the `init` target.
 
 .. code-block:: bash
 
@@ -161,18 +161,19 @@ Export the following shell environment variables to run the unit tests.
 
 .. code-block:: bash
 
-    export PROXMOX_SECRETS=<proxmox secrets yaml file path>
+    # Connection info:
+    export PROXMOX_HOST=<proxmox hostname>
+    export PROXMOX_USER=<username@realm>   # e.g. root@pam
+    export PROXMOX_PASSWORD=<password>
+    export PROXMOX_TOKEN_ID=<id>
+    export PROXMOX_TOKEN_SECRET=<secret>
     export PROXMOX_NODE=<proxmox node name>
     export PROXMOX_SSH_USER=<username>
     export PROXMOX_SSH_IDENTITY_FILE=<ssh key file for username>
+
+    # Template id and names for unit tests:
     export PROXMOX_TEMPLATE_VMID=<template vmid to be cloned in by-vmid scenario>
     export PROXMOX_TEMPLATE_NAME=<template name to be cloned in by-name scenario>
-
-The secrets file should contain the proxmox login credentials, either the
-username and password, or a Proxmox API token id and value.  This file should
-be encrypted with `ansible-vault`. The ssh user and identity file should match
-the user and public key installed when the virtual machine template was
-created.
 
 To run the unit tests in verbose mode:
 

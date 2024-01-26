@@ -5,9 +5,10 @@
 #
 #    $ python3 -m venv .venv
 #    $ source .venv/bin/activate
-#    (venv) $ pip install -U pip setuptools
-#    (venv) $ pip install tox
-#    (venv) $ tox
+#    (.venv) $ pip install -U pip setuptools
+#    (.venv) $ pip install tox
+#    (.venv) $ tox list
+#    (.venv) $ tox -e <testenv>
 #
 
 PYTHON3=python3
