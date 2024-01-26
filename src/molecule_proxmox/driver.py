@@ -92,7 +92,7 @@ class Proxmox(Driver):
                 "ansible_port": d["port"],
                 "ansible_private_key_file": d["identity_file"],
                 "connection": "ssh",
-                "ansible_ssh_common_args": " ".join(self.ssh_connection_options),
+                "ansible_ssh_common_args": " ".join(self.ssh_connection_options),  # noqa: E501
             }
         except StopIteration:
             return {}
@@ -102,9 +102,9 @@ class Proxmox(Driver):
             return {}
 
     def _get_instance_config(self, instance_name):
-        instance_config_dict = util.safe_load_file(self._config.driver.instance_config)
+        instance_config_dict = util.safe_load_file(self._config.driver.instance_config)  # noqa: E501
         return next(
-            item for item in instance_config_dict if item["instance"] == instance_name
+            item for item in instance_config_dict if item["instance"] == instance_name   # noqa: E501
         )
 
     def sanity_checks(self):
