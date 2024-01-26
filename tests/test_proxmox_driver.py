@@ -35,7 +35,9 @@ def test_molecule_init_scenario(tmpdir):
         assert pathlib.Path('molecule/default/destroy.yml').exists()
         assert pathlib.Path('molecule/default/molecule.yml').exists()
 
-@pytest.mark.parametrize('scenario', ['default', 'by-name', 'by-vmid', 'cloud-init'])
+
+@pytest.mark.parametrize('scenario', [
+                           'default', 'by-name', 'by-vmid', 'cloud-init'])
 def test_molecule_test(scenario):
     print('')
     testdir = pathlib.Path(__file__).resolve().parent

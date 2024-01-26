@@ -13,11 +13,12 @@ DOCUMENTATION = r"""
 ---
 module: proxmox_qemu_agent
 
-short_description: Query the QEMU guest agent to find the IP addresses of a running vm.
+short_description: Query the QEMU guest agent to find the IP addresses
+                   of a running vm.
 
 description:
-  - Start the vm if it is currently not running and wait until at least one non-loopback
-    IP address is detected.
+  - Start the vm if it is currently not running and wait until at least
+    one non-loopback IP address is detected.
 
   - Fails when an IP address is not found within the timeout value.
 
@@ -49,23 +50,23 @@ addresses:
   sample: ['192.168.136.123']
 """
 
-import time
-import syslog
+import time  # noqa: E402
+import syslog  # noqa: E402
 
-from proxmoxer import ProxmoxAPI
-from proxmoxer.core import ResourceException
-from ansible.module_utils.basic import AnsibleModule
+from proxmoxer import ProxmoxAPI  # noqa: E402
+from proxmoxer.core import ResourceException  # noqa: E402
+from ansible.module_utils.basic import AnsibleModule  # noqa: E402
 
 
 def get_vm(module, proxmox, vmid):
     """
     Look up a vm by id, and fail if not found.
     """
-    vm_list = [vm for vm in proxmox.cluster.resources.get(type='vm') if vm['vmid'] == int(vmid)]
+    vm_list = [vm for vm in proxmox.cluster.resources.get(type='vm') if vm['vmid'] == int(vmid)]  # noqa: E501
     if len(vm_list) == 0:
         module.fail_json(vmid=vmid, msg='VM with vmid = %s not found' % vmid)
     if len(vm_list) > 1:
-        module.fail_json(vmid=vmid, msg='Multiple VMs with vmid = %s found' % vmid)
+        module.fail_json(vmid=vmid, msg='Multiple VMs with vmid = %s found' % vmid)  # noqa: E501
     return vm_list[0]
 
 
@@ -106,12 +107,12 @@ def query_vm(module, proxmox, vm):
     while timeout:
         reply = None
         try:
-            reply = proxmox_node.qemu(vmid).agent.get('network-get-interfaces')
+            reply = proxmox_node.qemu(vmid).agent.get('network-get-interfaces')  # noqa: E501
             # syslog.syslog('network-get-interfaces: {0}'.format(reply))
         except ResourceException as e:
-            if e.status_code == 500 and 'VM {0} is not running'.format(vmid) in e.content:
+            if e.status_code == 500 and 'VM {0} is not running'.format(vmid) in e.content:  # noqa: 501
                 start_vm(module, proxmox, vm)
-            elif e.status_code == 500 and 'QEMU guest agent is not running' in e.content:
+            elif e.status_code == 500 and 'QEMU guest agent is not running' in e.content:  # noqa: 501
                 pass  # Waiting for guest agent to start.
             else:
                 module.fail_json(msg=str(e))
@@ -131,7 +132,8 @@ def query_vm(module, proxmox, vm):
 
 def i2a(interfaces):
     """
-    Extract the non-loopback IPv4 addresses from network-get-interfaces results.
+    Extract the non-loopback IPv4 addresses from
+    network-get-interfaces results.
 
     Example:
 
