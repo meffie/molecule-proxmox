@@ -1,0 +1,77 @@
+---
+- name: "Check template name."
+  ansible.builtin.debug:
+    msg: "WARNING: Template name not specifed for instance {{ p.name }}; using 'molecule'."
+  when:
+    - p.proxmox_template_name is not defined
+    - p.template_name is not defined
+    - options.template_name is not defined
+    - p.box is not defined
+
+- name: "Create virtual machine instance."
+  community.general.proxmox_kvm:
+    state: present
+    api_host: "{{ api_host | d(options.api_host) | d(omit) }}"
+    api_user: "{{ api_user | d(options.api_user) | d(omit) }}"
+    api_password: "{{ api_password | d(options.api_password) | d(omit) }}"
+    api_token_id: "{{ api_token_id | d(options.api_token_id) | d(omit) }}"
+    api_token_secret: "{{ api_token_secret | d(options.api_token_secret) | d(omit) }}"
+    vmid: "{{ p.proxmox_template_vmid | d(p.template_vmid, true) | d(omit, true) }}"
+    clone: "{{ p.proxmox_template_name | d(p.template_name, true) |
+               d(options.template_name, true) | d('molecule', true) }}"
+    name: "{{ p.name }}"
+    node: "{{ options.node }}"
+    timeout: "{{ options.timeout | d(omit) }}"
+  register: kvm_clone
+
+- name: "Update virtual machine cloud-init configuration."
+  community.general.proxmox_kvm:
+    state: present
+    update: true
+    api_host: "{{ api_host | d(options.api_host) | d(omit) }}"
+    api_user: "{{ api_user | d(options.api_user) | d(omit) }}"
+    api_password: "{{ api_password | d(options.api_password) | d(omit) }}"
+    api_token_id: "{{ api_token_id | d(options.api_token_id) | d(omit) }}"
+    api_token_secret: "{{ api_token_secret | d(options.api_token_secret) | d(omit) }}"
+    vmid: "{{ kvm_clone.vmid }}"
+    node: "{{ options.node }}"
+    timeout: "{{ options.timeout | d(omit) }}"
+    ciuser: "{{ p.ciuser | d(omit, true) }}"
+    cipassword: "{{ p.cipassword | d(omit, true) }}"
+    citype: "{{ p.citype | d(omit, true) }}"
+    ipconfig: "{{ p.ipconfig | d(omit, true) }}"
+    nameservers: "{{ p.nameservers | d(omit, true) }}"
+    searchdomains: "{{ p.searchdomains | d(omit, true) }}"
+    sshkeys: "{{ p.sshkeys | d(omit, true) }}"
+  when: >
+    p.ciuser is defined or
+    p.cipassword is defined or
+    p.citype is defined or
+    p.ipconfig is defined or
+    p.nameservers is defined or
+    p.searchdomains is defined or
+    p.sshkeys is defined
+
+- name: "Start virtual machine instance."
+  proxmox_qemu_agent:
+    api_host: "{{ api_host | d(options.api_host) | d(omit) }}"
+    api_user: "{{ api_user | d(options.api_user) | d(omit) }}"
+    api_password: "{{ api_password | d(options.api_password) | d(omit) }}"
+    api_token_id: "{{ api_token_id | d(options.api_token_id) | d(omit) }}"
+    api_token_secret: "{{ api_token_secret | d(options.api_token_secret) | d(omit) }}"
+    vmid: "{{ kvm_clone.vmid }}"
+    timeout: "{{ options.timeout | d(omit) }}"
+  register: qemu_agent
+
+- name: "Populate molecule instance configuration."
+  vars:
+    instance_config:
+      instance: "{{ p.name }}"
+      address: "{{ qemu_agent.addresses[0] }}"
+      user: "{{ options.ssh_user | d('molecule') }}"
+      port: 22
+      identity_file: "{{ options.ssh_identity_file }}"
+      vmid: "{{ kvm_clone.vmid }}"
+      virtualization: "kvm"
+  ansible.builtin.set_fact:
+     instance_configs: "{{ instance_configs + [instance_config] }}"
