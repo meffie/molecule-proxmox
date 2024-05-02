@@ -62,8 +62,8 @@ Examples
    driver:
      name: molecule-proxmox
      options:
-        api_host: pve01.example.com
-        api_user: molecule
+        api_host: <hostname>        # e.g. pve01.example.com
+        api_user: <name>@<realm>    # e.g. root@pam
         api_password: "********"
         node: pve01
         ssh_user: tester
@@ -79,8 +79,8 @@ Examples
    driver:
      name: molecule-proxmox
      options:
-        api_host: pve01.example.com
-        api_user: molecule
+        api_host: <hostname>        # e.g. pve01.example.com
+        api_user: <name>@<realm>    # e.g. root@pam
         # Optional: Use an API token for Proxmox authentication.
         api_token_id: "********"
         api_token_secret: "*******************************"
