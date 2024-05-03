@@ -2,9 +2,9 @@
 Molecule Proxmox Plugin
 ***********************
 
-This is an experimental Ansible Molecule Driver plugin to manage instances on a
+This is an Ansible Molecule Driver plugin to manage instances on a
 `Proxmox VE`_ hypervisor cluster.  Only virtual machines are supported at this
-time.  Proxmox containers will be supported in a future release.
+time.
 
 Requirements
 ============
@@ -50,9 +50,8 @@ Molecule Proxmox plugin in a virtualenv called ``venv``.
 .. code-block:: bash
 
     $ python3 -m venv venv
-    $ source venv/bin/activate
-    $ pip3 install molecule[ansible] molecule-proxmox
-
+    $ . venv/bin/activate
+    $ pip3 install ansible-core molecule molecule-proxmox
 
 Examples
 ========
