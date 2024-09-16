@@ -66,6 +66,7 @@ Examples
         api_password: "********"
         node: pve01
         ssh_user: tester
+        ssh_port: 22022             # default to 22
         ssh_identity_file: /path/to/id_rsa
    platforms:
      - name: test01
@@ -85,6 +86,7 @@ Examples
         api_token_secret: "*******************************"
         node: pve01
         ssh_user: tester
+        ssh_port: 22022             # default to 22
         ssh_identity_file: /path/to/id_rsa
         # Optional: The default template name.
         template_name: debian11
@@ -109,6 +111,7 @@ Examples
         proxmox_secrets: /path/to/proxmox_secrets.yml"
         node: pve01
         ssh_user: tester
+        ssh_port: 22022             # default to 22
         ssh_identity_file: /path/to/id_rsa
         template_name: debian11
    platforms:
@@ -124,6 +127,7 @@ Examples
         proxmox_secrets: /path/to/proxmox_secrets.yml"
         node: pve01
         ssh_user: tester
+        ssh_port: 22022             # default to 22
         ssh_identity_file: /path/to/id_rsa
         template_name: debian11
    platforms:

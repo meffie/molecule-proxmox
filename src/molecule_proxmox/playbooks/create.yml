@@ -85,7 +85,7 @@
           instance: "{{ ra.rc.p.name }}"
           address: "{{ ra.addresses[0] }}"
           user: "{{ options.ssh_user | d('molecule') }}"
-          port: 22
+          port: "{{ options.ssh_port | d('22') }}"
           identity_file: "{{ options.ssh_identity_file }}"
           vmid: "{{ ra.vmid }}"
       loop: "{{ proxmox_qemu_agent.results }}"
