@@ -30,7 +30,7 @@ setuptools.setup(
         'molecule>=6.0.0',
         'PyYAML',
         'proxmoxer>=1.3.1',
-        'requests'
+        'requests',
     ],
     classifiers=[
         'Programming Language :: Python :: 3',
