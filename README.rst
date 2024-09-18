@@ -108,8 +108,7 @@ Examples
    driver:
      name: molecule-proxmox
      options:
-        # Secrets file may be encrypted with ansible-vault.
-        proxmox_secrets: /path/to/proxmox_secrets.yml"
+        proxmox_secrets: /path/to/proxmox_secrets.yml
         node: pve01
         ssh_user: tester
         ssh_port: 22022             # default to 22
@@ -119,14 +118,42 @@ Examples
      - name: test01
      - name: test02
 
+The ``proxmox_secrets`` specifies the path to an external file with settings
+for the proxmox API connection, such as api_password. If this is a regular
+file, it should be a yaml file with the settings to be included. If the file is
+an executable, the file will be run and the stdout will be combined with the
+driver options.  This allows you to use an external password manager to store
+the Proxmox API connection settings.  For example:
+
 .. code-block:: yaml
 
    driver:
      name: molecule-proxmox
      options:
-        # Secrets file may be encrypted with ansible-vault.
         debug: true  # Enable logging proxmox_secrets tasks for troubleshooting
-        proxmox_secrets: /path/to/proxmox_secrets.yml"
+        proxmox_secrets: /usr/local/bin/proxmox_secrets.sh
+        node: pve01
+
+.. code-block:: yaml
+
+    $ cat /usr/local/bin/proxmox_secrets.sh
+    #!/bin/sh
+    pass proxmox/pve01
+
+.. code-block:: bash
+
+    $ /usr/local/bin/proxmox_secrets.sh
+    ---
+    api_host: my-proxmox-host
+    api_user: my-proxmox-user@pam
+    api_password: my-secret-password
+
+.. code-block:: yaml
+
+   driver:
+     name: molecule-proxmox
+     options:
+        proxmox_secrets: /path/to/proxmox_secrets.yml
         node: pve01
         ssh_user: tester
         ssh_port: 22022             # default to 22
@@ -176,6 +203,8 @@ Export the following shell environment variables to run the unit tests.
     export TEST_PROXMOX_PASSWORD=<password>
     export TEST_PROXMOX_TOKEN_ID=<id>
     export TEST_PROXMOX_TOKEN_SECRET=<secret>
+    export TEST_PROXMOX_SECRETS_FILE=<path to proxmox secrets yaml file>
+    export TEST_PROXMOX_SECRETS_SCRIPT=<path to proxmox secrets script file>
     export TEST_PROXMOX_NODE=<proxmox node name>
     export TEST_PROXMOX_SSH_USER=<username>
     export TEST_PROXMOX_SSH_IDENTITY_FILE=<ssh key file for username>
