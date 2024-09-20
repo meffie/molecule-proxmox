@@ -30,6 +30,7 @@
     - name: "Remove molecule instance(s)."
       community.general.proxmox_kvm:
         api_host: "{{ api_host | d(options.api_host) | d(omit) }}"
+        api_port: "{{ api_port | d(options.api_port) | d(omit) }}"
         api_user: "{{ api_user | d(options.api_user) | d(omit) }}"
         api_password: "{{ api_password | d(options.api_password) | d(omit) }}"
         api_token_id: "{{ api_token_id | d(options.api_token_id) | d(omit) }}"
