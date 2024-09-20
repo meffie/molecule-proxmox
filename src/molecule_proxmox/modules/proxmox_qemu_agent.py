@@ -190,6 +190,7 @@ def run_module():
     module = AnsibleModule(
         argument_spec=dict(
             api_host=dict(type='str', required=True),
+            api_port=dict(type='int', default=None),
             api_user=dict(type='str', required=True),
             api_password=dict(type='str', no_log=True),
             api_token_id=dict(type='str', no_log=True),
@@ -202,6 +203,7 @@ def run_module():
         required_one_of=[('api_password', 'api_token_id')],
     )
     api_host = module.params['api_host']
+    api_port = module.params['api_port']
     validate_certs = module.params['validate_certs']
     api_user = module.params['api_user']
     api_password = module.params['api_password']
@@ -217,7 +219,7 @@ def run_module():
         auth_args['token_value'] = api_token_secret
 
     # API Login
-    proxmox = ProxmoxAPI(api_host, verify_ssl=validate_certs, **auth_args)
+    proxmox = ProxmoxAPI(api_host, port=api_port, verify_ssl=validate_certs, **auth_args)
 
     # Lookup the vm by id.
     time.sleep(1)    # Delay for API since we just cloned this instance.

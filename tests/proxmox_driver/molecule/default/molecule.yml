@@ -6,6 +6,7 @@ driver:
   name: molecule-proxmox
   options:
     api_host: "${PROXMOX_HOST}"
+    api_port: ${PROXMOX_PORT}
     api_user: "${PROXMOX_USER}"
     api_password: "${PROXMOX_PASSWORD}"
     node: "${PROXMOX_NODE}"

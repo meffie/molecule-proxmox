@@ -80,6 +80,7 @@ Examples
      name: molecule-proxmox
      options:
         api_host: <hostname>        # e.g. pve01.example.com
+        api_port: 18006             # custom proxmox port number
         api_user: <name>@<realm>    # e.g. root@pam
         # Optional: Use an API token for Proxmox authentication.
         api_token_id: "********"
@@ -166,6 +167,7 @@ Export the following shell environment variables to run the unit tests.
 
     # Connection info:
     export PROXMOX_HOST=<proxmox hostname>
+    export PROXMOX_PORT=<proxmox port>
     export PROXMOX_USER=<username@realm>   # e.g. root@pam
     export PROXMOX_PASSWORD=<password>
     export PROXMOX_TOKEN_ID=<id>
