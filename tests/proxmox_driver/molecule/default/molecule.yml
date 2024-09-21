@@ -5,14 +5,14 @@ dependency:
 driver:
   name: molecule-proxmox
   options:
-    api_host: "${PROXMOX_HOST}"
-    api_port: ${PROXMOX_PORT}
-    api_user: "${PROXMOX_USER}"
-    api_password: "${PROXMOX_PASSWORD}"
-    node: "${PROXMOX_NODE}"
-    ssh_user: "${PROXMOX_SSH_USER}"
-    ssh_identity_file: "${PROXMOX_SSH_IDENTITY_FILE}"
-    template_name: "${PROXMOX_TEMPLATE_NAME}"
+    api_host: "${TEST_PROXMOX_HOST}"
+    api_port: ${TEST_PROXMOX_PORT}
+    api_user: "${TEST_PROXMOX_USER}"
+    api_password: "${TEST_PROXMOX_PASSWORD}"
+    node: "${TEST_PROXMOX_NODE}"
+    ssh_user: "${TEST_PROXMOX_SSH_USER}"
+    ssh_identity_file: "${TEST_PROXMOX_SSH_IDENTITY_FILE}"
+    template_name: "${TEST_PROXMOX_TEMPLATE_NAME}"
 
 platforms:
   - name: m01

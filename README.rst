@@ -166,19 +166,19 @@ Export the following shell environment variables to run the unit tests.
 .. code-block:: bash
 
     # Connection info:
-    export PROXMOX_HOST=<proxmox hostname>
-    export PROXMOX_PORT=<proxmox port>
-    export PROXMOX_USER=<username@realm>   # e.g. root@pam
-    export PROXMOX_PASSWORD=<password>
-    export PROXMOX_TOKEN_ID=<id>
-    export PROXMOX_TOKEN_SECRET=<secret>
-    export PROXMOX_NODE=<proxmox node name>
-    export PROXMOX_SSH_USER=<username>
-    export PROXMOX_SSH_IDENTITY_FILE=<ssh key file for username>
+    export TEST_PROXMOX_HOST=<proxmox hostname>
+    export TEST_PROXMOX_PORT=<proxmox port>
+    export TEST_PROXMOX_USER=<username@realm>   # e.g. root@pam
+    export TEST_PROXMOX_PASSWORD=<password>
+    export TEST_PROXMOX_TOKEN_ID=<id>
+    export TEST_PROXMOX_TOKEN_SECRET=<secret>
+    export TEST_PROXMOX_NODE=<proxmox node name>
+    export TEST_PROXMOX_SSH_USER=<username>
+    export TEST_PROXMOX_SSH_IDENTITY_FILE=<ssh key file for username>
 
     # Template id and names for unit tests:
-    export PROXMOX_TEMPLATE_VMID=<template vmid to be cloned in by-vmid scenario>
-    export PROXMOX_TEMPLATE_NAME=<template name to be cloned in by-name scenario>
+    export TEST_PROXMOX_TEMPLATE_VMID=<template vmid to be cloned in by-vmid scenario>
+    export TEST_PROXMOX_TEMPLATE_NAME=<template name to be cloned in by-name scenario>
 
 To run the unit tests in verbose mode:
 
