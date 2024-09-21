@@ -125,6 +125,7 @@ Examples
      name: molecule-proxmox
      options:
         # Secrets file may be encrypted with ansible-vault.
+        debug: true  # Enable logging proxmox_secrets tasks for troubleshooting
         proxmox_secrets: /path/to/proxmox_secrets.yml"
         node: pve01
         ssh_user: tester
@@ -164,6 +165,9 @@ A Python virtualenv environment may be created with the `init` target.
 Export the following shell environment variables to run the unit tests.
 
 .. code-block:: bash
+
+    # General
+    export TEST_DEBUG="true"|"false"
 
     # Connection info:
     export TEST_PROXMOX_HOST=<proxmox hostname>

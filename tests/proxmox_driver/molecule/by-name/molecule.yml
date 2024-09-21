@@ -13,6 +13,7 @@ driver:
     # Default template name. Defaults to 'molecule' if not set.
     template_name: "${TEST_PROXMOX_TEMPLATE_NAME}"
     timeout: 120
+    debug: "${TEST_PROXMOX_DEBUG}"
 
 platforms:
   # Uses the default template name.

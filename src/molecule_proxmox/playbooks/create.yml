@@ -9,7 +9,7 @@
     - name: "Load proxmox secrets."
       ansible.builtin.include_vars: "{{ options.proxmox_secrets }}"
       when: options.proxmox_secrets is defined
-      no_log: true
+      no_log: "{{ not (options.debug | d(False) | bool) }}"
 
     - name: "Create molecule instance(s)."
       community.general.proxmox_kvm:
