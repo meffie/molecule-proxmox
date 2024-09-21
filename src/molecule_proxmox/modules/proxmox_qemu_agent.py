@@ -219,7 +219,11 @@ def run_module():
         auth_args['token_value'] = api_token_secret
 
     # API Login
-    proxmox = ProxmoxAPI(api_host, port=api_port, verify_ssl=validate_certs, **auth_args)
+    proxmox = ProxmoxAPI(
+        api_host,
+        port=api_port,
+        verify_ssl=validate_certs,
+        **auth_args)
 
     # Lookup the vm by id.
     time.sleep(1)    # Delay for API since we just cloned this instance.
