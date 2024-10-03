@@ -194,7 +194,7 @@ Export the following shell environment variables to run the unit tests.
 .. code-block:: bash
 
     # General
-    export TEST_DEBUG="true"|"false"
+    export TEST_PROXMOX_DEBUG="true"|"false"
 
     # Connection info:
     export TEST_PROXMOX_HOST=<proxmox hostname>
