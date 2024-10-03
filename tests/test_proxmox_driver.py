@@ -37,7 +37,8 @@ def test_molecule_init_scenario(tmpdir):
 
 
 @pytest.mark.parametrize('scenario', [
-                           'default', 'by-name', 'by-vmid', 'cloud-init'])
+                           'default', 'by-name', 'by-vmid', 'cloud-init',
+                           'secrets-file', 'secrets-script'])
 def test_molecule_test(scenario):
     print('')
     testdir = pathlib.Path(__file__).resolve().parent
