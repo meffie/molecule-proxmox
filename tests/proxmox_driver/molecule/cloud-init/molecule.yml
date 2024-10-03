@@ -18,9 +18,8 @@ platforms:
     ciuser: tycobb
     cipassword: secret
     nameservers:
-      - 192.168.96.4
+      - "${TEST_PROXMOX_NAMESERVER:-192.168.96.4}"
     ipconfig:
-      ipconfig0: 'ip=192.168.136.99/24,gw=192.168.0.1'
-
+      ipconfig0: "${TEST_PROXMOX_CLOUDINIT:-ip=192.168.136.99/24,gw=192.168.0.1}"
 provisioner:
   name: ansible
