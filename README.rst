@@ -118,12 +118,18 @@ Examples
      - name: test01
      - name: test02
 
-The ``proxmox_secrets`` specifies the path to an external file with settings
-for the proxmox API connection, such as api_password. If this is a regular
+The ``proxmox_secrets`` setting specifies the path to an external file with
+settings for the proxmox API connection, such as api_password. If this is a regular
 file, it should be a yaml file with the settings to be included. If the file is
 an executable, the file will be run and the stdout will be combined with the
-driver options.  This allows you to use an external password manager to store
-the Proxmox API connection settings.  For example:
+driver options. The output of the script needs to be valid yaml
+consisting of dictionary keys and values (e.g. ``api_password: foobar``).
+
+The value of ``proxmox_secrets`` will be passed into ``ansible.builtin.cmd``.
+Therefore, any additional argument values will be passed to the script as well.
+
+This allows you to use an external password manager to store
+the Proxmox API connection settings.  For example with a script:
 
 .. code-block:: yaml
 
@@ -134,19 +140,32 @@ the Proxmox API connection settings.  For example:
         proxmox_secrets: /usr/local/bin/proxmox_secrets.sh
         node: pve01
 
-.. code-block:: yaml
+.. code-block:: bash
 
     $ cat /usr/local/bin/proxmox_secrets.sh
     #!/bin/sh
     pass proxmox/pve01
 
-.. code-block:: bash
+Or with a file (which **must** not be executable):
 
-    $ /usr/local/bin/proxmox_secrets.sh
+.. code-block:: yaml
+
+   driver:
+     name: molecule-proxmox
+     options:
+        debug: true  # Enable logging proxmox_secrets tasks for troubleshooting
+        proxmox_secrets: $HOME/proxmox_secrets.yaml
+        node: pve01
+
+.. code-block:: yaml
+
+    $ cat $HOME/proxmox_secrets.yaml
     ---
     api_host: my-proxmox-host
     api_user: my-proxmox-user@pam
     api_password: my-secret-password
+
+Finally, a configuration example with many features enabled:
 
 .. code-block:: yaml
 
@@ -161,6 +180,7 @@ the Proxmox API connection settings.  For example:
         template_name: debian11
    platforms:
      - name: test01
+       newid: 1000
        template_name: debian11
        # See https://docs.ansible.com/ansible/latest/collections/community/general/proxmox_kvm_module.html
        # for cloud-init options.
