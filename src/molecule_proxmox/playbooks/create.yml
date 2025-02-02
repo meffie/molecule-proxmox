@@ -4,7 +4,7 @@
   connection: local
   gather_facts: false
   vars:
-      options: "{{ molecule_yml.driver.options }}"
+    options: "{{ molecule_yml.driver.options }}"
   tasks:
     - name: "Load proxmox connection secrets."
       ansible.builtin.include_tasks: common/secrets.yml
@@ -26,74 +26,87 @@
         timeout: "{{ options.timeout | d(omit) }}"
         pool: "{{ options.pool | d(omit) }}"
         newid: "{{ p.newid | d(p.newid, true) | d(omit, true) }}"
+        ciuser: "{{ p.ciuser | d(omit, true) }}"
+        cipassword: "{{ p.cipassword | d(omit, true) }}"
+        citype: "{{ p.citype | d(omit, true) }}"
+        ipconfig: "{{ p.ipconfig | d(omit, true) }}"
+        nameservers: "{{ p.nameservers | d(omit, true) }}"
+        searchdomains: "{{ p.searchdomains | d(omit, true) }}"
+        sshkeys: "{{ p.sshkeys | d(omit, true) }}"
       loop: "{{ molecule_yml.platforms }}"
       loop_control:
         loop_var: p
         label: "{{ p.name }}"
       register: proxmox_clone
 
-    - name: "Update molecule instance config(s)"
-      community.general.proxmox_kvm:
-        state: present
-        update: true
-        api_host: "{{ api_host | d(options.api_host) | d(omit) }}"
-        api_port: "{{ api_port | d(options.api_port) | d(omit) }}"
-        api_user: "{{ api_user | d(options.api_user) | d(omit) }}"
-        api_password: "{{ api_password | d(options.api_password) | d(omit) }}"
-        api_token_id: "{{ api_token_id | d(options.api_token_id) | d(omit) }}"
-        api_token_secret: "{{ api_token_secret | d(options.api_token_secret) | d(omit) }}"
-        vmid: "{{ rc.vmid }}"
-        node: "{{ options.node }}"
-        timeout: "{{ options.timeout | d(omit) }}"
-        ciuser: "{{ rc.p.ciuser | d(omit, true) }}"
-        cipassword: "{{ rc.p.cipassword | d(omit, true) }}"
-        citype: "{{ rc.p.citype | d(omit, true) }}"
-        ipconfig: "{{ rc.p.ipconfig | d(omit, true) }}"
-        nameservers: "{{ rc.p.nameservers | d(omit, true) }}"
-        searchdomains: "{{ rc.p.searchdomains | d(omit, true) }}"
-        sshkeys: "{{ rc.p.sshkeys | d(omit, true) }}"
-      when: >
-        rc.p.ciuser is defined or
-        rc.p.cipassword is defined or
-        rc.p.citype is defined or
-        rc.p.ipconfig is defined or
-        rc.p.nameservers is defined or
-        rc.p.searchdomains is defined or
-        rc.p.sshkeys is defined
-      loop: "{{ proxmox_clone.results }}"
-      loop_control:
-        loop_var: rc
-        label: "{{ rc.p.name, rc.vmid }}"
-
     - name: "Start molecule instance(s)."
-      proxmox_qemu_agent:
+      community.general.proxmox_kvm:
+        state: started
         api_host: "{{ api_host | d(options.api_host) | d(omit) }}"
         api_port: "{{ api_port | d(options.api_port) | d(omit) }}"
         api_user: "{{ api_user | d(options.api_user) | d(omit) }}"
         api_password: "{{ api_password | d(options.api_password) | d(omit) }}"
         api_token_id: "{{ api_token_id | d(options.api_token_id) | d(omit) }}"
         api_token_secret: "{{ api_token_secret | d(options.api_token_secret) | d(omit) }}"
-        vmid: "{{ rc.vmid }}"
+        vmid: "{{ proxmox_clone_results.vmid }}"
         timeout: "{{ options.timeout | d(omit) }}"
       loop: "{{ proxmox_clone.results }}"
       loop_control:
-        loop_var: rc
-        label: "{{ rc.p.name, rc.vmid }}"
-      register: proxmox_qemu_agent
+        loop_var: proxmox_clone_results
+        label: "{{ proxmox_clone_results.p.name, proxmox_clone_results.vmid }}"
+
+
+#    - name: "Start molecule instance(s)."
+#      proxmox_qemu_agent:
+#        api_host: "{{ api_host | d(options.api_host) | d(omit) }}"
+#        api_port: "{{ api_port | d(options.api_port) | d(omit) }}"
+#        api_user: "{{ api_user | d(options.api_user) | d(omit) }}"
+#        api_password: "{{ api_password | d(options.api_password) | d(omit) }}"
+#        api_token_id: "{{ api_token_id | d(options.api_token_id) | d(omit) }}"
+#        api_token_secret: "{{ api_token_secret | d(options.api_token_secret) | d(omit) }}"
+#        vmid: "{{ rc.vmid }}"
+#        timeout: "{{ options.timeout | d(omit) }}"
+#      loop: "{{ proxmox_clone.results }}"
+#      loop_control:
+#        loop_var: rc
+#        label: "{{ rc.p.name, rc.vmid }}"
+#      register: proxmox_qemu_agent
+
+    - name: "Obtain VM information"
+      community.general.proxmox_vm_info:
+        api_host: "{{ api_host | d(options.api_host) | d(omit) }}"
+        api_port: "{{ api_port | d(options.api_port) | d(omit) }}"
+        api_user: "{{ api_user | d(options.api_user) | d(omit) }}"
+        api_password: "{{ api_password | d(options.api_password) | d(omit) }}"
+        api_token_id: "{{ api_token_id | d(options.api_token_id) | d(omit) }}"
+        api_token_secret: "{{ api_token_secret | d(options.api_token_secret) | d(omit) }}"
+        vmid: "{{ proxmox_clone_results.vmid }}"
+        network: true
+      loop: "{{ proxmox_clone.results }}"
+      loop_control:
+        loop_var: proxmox_clone_results
+        label: "{{ proxmox_clone_results.p.name, proxmox_clone_results.vmid }}"
+      register: vminfo
+      until: "vminfo is not failed"
+      retries: 5
+      delay: "{{ options.timeout | d(25) | int / 5 | int }}"
+
+    - name: "Load ip address subtask."
+      ansible.builtin.import_tasks: common/match_ip_address.yml
 
     - name: "Populate instance configs."
       ansible.builtin.set_fact:
         instance_config:
-          instance: "{{ ra.rc.p.name }}"
-          address: "{{ ra.addresses[0] }}"
+          instance: "{{ guest_vars_results.vminfo_results.proxmox_vms[0]['name'] }}"
+          address: "{{ guest_vars_results.ansible_facts.address[0] }}"
           user: "{{ options.ssh_user | d('molecule') }}"
           port: "{{ options.ssh_port | d(22) }}"
           identity_file: "{{ options.ssh_identity_file }}"
-          vmid: "{{ ra.vmid }}"
-      loop: "{{ proxmox_qemu_agent.results }}"
+          vmid: "{{ guest_vars_results.vminfo_results.proxmox_vms[0]['vmid'] }}"
+      loop: "{{ guest_vars.results }}"
       loop_control:
-        loop_var: ra
-        label: "{{ ra.rc.p.name, ra.vmid, ra.addresses[0] }}"
+        loop_var: guest_vars_results
+        label: "{{ guest_vars_results.vminfo_results.proxmox_vms[0]['name'], guest_vars_results.vminfo_results.proxmox_vms[0]['vmid'] }}"
       register: instance_configs
 
     - name: "Set instance_config fact."
