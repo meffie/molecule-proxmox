@@ -47,11 +47,15 @@ The ``molecule-proxmox`` plugin may be installed with Python ``pip``. A virtuale
 is recommended.  The following commands install Ansible, Molecule, and the
 Molecule Proxmox plugin in a virtualenv called ``venv``.
 
+Please note that due to a recent change in molecule this plugin 
+will not work out of the box with molecule >=25.2.0. 
+Therefore you will have to pin the dependency to 25.1.0 or less, until #28 is merged.
+
 .. code-block:: bash
 
     $ python3 -m venv venv
     $ . venv/bin/activate
-    $ pip3 install ansible-core molecule molecule-proxmox
+    $ pip3 install ansible-core molecule==25.1.0 molecule-proxmox
 
 Examples
 ========
