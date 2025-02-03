@@ -55,23 +55,6 @@
         loop_var: proxmox_clone_results
         label: "{{ proxmox_clone_results.p.name, proxmox_clone_results.vmid }}"
 
-
-#    - name: "Start molecule instance(s)."
-#      proxmox_qemu_agent:
-#        api_host: "{{ api_host | d(options.api_host) | d(omit) }}"
-#        api_port: "{{ api_port | d(options.api_port) | d(omit) }}"
-#        api_user: "{{ api_user | d(options.api_user) | d(omit) }}"
-#        api_password: "{{ api_password | d(options.api_password) | d(omit) }}"
-#        api_token_id: "{{ api_token_id | d(options.api_token_id) | d(omit) }}"
-#        api_token_secret: "{{ api_token_secret | d(options.api_token_secret) | d(omit) }}"
-#        vmid: "{{ rc.vmid }}"
-#        timeout: "{{ options.timeout | d(omit) }}"
-#      loop: "{{ proxmox_clone.results }}"
-#      loop_control:
-#        loop_var: rc
-#        label: "{{ rc.p.name, rc.vmid }}"
-#      register: proxmox_qemu_agent
-
     - name: "Obtain VM information"
       community.general.proxmox_vm_info:
         api_host: "{{ api_host | d(options.api_host) | d(omit) }}"
