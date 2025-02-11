@@ -1,0 +1,28 @@
+---
+
+- name: Set IP address blindly through qemu
+  ansible.builtin.set_fact:
+    address: >
+      {{ vminfo_results.proxmox_vms[0]['network']
+      | selectattr(
+        'ip-addresses',
+        'defined'
+        )
+      | map(attribute='ip-addresses')
+      | flatten
+      | map(attribute='ip-address')
+      | reject(
+        'match',
+        '^(fe80:|127.|::|169.254.)'
+        )
+      | trim
+      }}
+  loop: "{{ vminfo.results }}"
+  loop_control:
+    loop_var: vminfo_results
+    label: "{{ vminfo_results.proxmox_vms[0]['name'], vminfo_results.proxmox_vms[0]['vmid'] }}"
+  register: guest_vars
+  when: >
+   (options.detection_type is defined and
+   options.detection_type == "qemu")
+   or options.detection_type is undefined
