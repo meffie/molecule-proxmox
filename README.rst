@@ -99,6 +99,8 @@ Examples
         sethostname: yes
         # Optional: Create the VMs in the pool.
         pool: test
+        # Optional: Create Linked clone instead of Full clone.
+        full: false
    platforms:
      - name: test01
        # Optional: Specify the VM id of the clone.

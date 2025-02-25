@@ -23,6 +23,7 @@
         clone: "{{ p.proxmox_template_name | d(p.template_name, true) | d(options.template_name, true) | d(p.box, true) | d('molecule', true) }}"
         name: "{{ p.name }}"
         node: "{{ options.node }}"
+        full: "{{ options.full | d(omit) }}"
         timeout: "{{ options.timeout | d(omit) }}"
         pool: "{{ options.pool | d(omit) }}"
         newid: "{{ p.newid | d(p.newid, true) | d(omit, true) }}"
