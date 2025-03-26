@@ -70,7 +70,7 @@
         loop_var: proxmox_clone_results
         label: "{{ proxmox_clone_results.p.name, proxmox_clone_results.vmid }}"
       register: vminfo
-      until: "vminfo is not failed"
+      until: "vminfo is not failed and vminfo.results.proxmox_vms[0] is defined"
       retries: 5
       delay: "{{ options.timeout | d(25) | int / 5 | int }}"
 
