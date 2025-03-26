@@ -22,9 +22,6 @@
     loop_var: vminfo_results
     label: "{{ vminfo_results.proxmox_vms[0]['name'], vminfo_results.proxmox_vms[0]['vmid'] }}"
   register: guest_vars
-  retries: 10
-  delay: 3
-  until: "guest_vars is not failed"
   when: >
    (options.detection_type is defined and
    options.detection_type == "qemu")
