@@ -1,58 +1,46 @@
-# Copyright 2020-2024 Sine Nomine Associates
+# Copyright 2020-2025 Sine Nomine Associates
 #
-# This is a helper makefile to run tox. Run tox directly if make is not
-# available:
+# This makefile is a optional tox front-end.
+# You can run tox directly without this makefile if you
+# prefer. For example:
 #
-#    $ python3 -m venv .venv
-#    $ source .venv/bin/activate
-#    (.venv) $ pip install -U pip setuptools
-#    (.venv) $ pip install tox
-#    (.venv) $ tox list
-#    (.venv) $ tox -e <testenv>
+#    $ pipx tox
+#    $ tox list
+#    $ tox -e <testenv> -- <pytest_options>
 #
 
-PYTHON3=python3
-PIP=.venv/bin/pip
-TOX=.venv/bin/tox
+TOX=tox
+TESTENV=latest
+PYTEST_FLAGS=
 
 .PHONY: help
 help:
-	@echo "usage: make <target>"
+	@echo "usage: make <target> [options]"
 	@echo ""
 	@echo "targets:"
-	@echo "  init       create python venv to run tox"
 	@echo "  lint       run lint checks"
-	@echo "  check      run quick tests"
-	@echo "  test       run all tests"
+	@echo "  test       run tests"
 	@echo "  docs       generate html docs"
 	@echo "  preview    local preview html docs"
 	@echo "  release    upload to pypi.org"
 	@echo "  clean      remove generated files"
 	@echo "  distclean  remove generated files and venvs"
-
-.venv/bin/activate: Makefile
-	$(PYTHON3) -m venv .venv
-	$(PIP) install -U pip
-	$(PIP) install tox
-	touch .venv/bin/activate
-
-.PHONY: init
-init: .venv/bin/activate
+	@echo ""
+	@echo "options:"
+	@echo "  TOX=<path>           tox path [default: .venv/bin/tox]"
+	@echo "  TESTENV=<env>        tox testenv [default: latest]"
+	@echo "  PYTEST_FLAGS=<flags> pytest options [default: (none)]"
 
 .PHONY: lint
-lint: init
+lint:
 	$(TOX) -e lint
-
-.PHONY: check
-check: lint
-	$(TOX) -e py312
 
 .PHONY: test
 test: lint
-	$(TOX)
+	$(TOX) -e $(TESTENV) -- $(PYTEST_FLAGS)
 
 .PHONY: docs
-docs: init
+docs:
 	$(TOX) -e docs
 
 .PHONY: preview
@@ -60,7 +48,7 @@ preview: docs
 	xdg-open docs/build/html/index.html
 
 .PHONY: release upload
-release upload: init
+release upload:
 	$(TOX) -e release
 
 .PHONY: clean
@@ -72,4 +60,4 @@ clean:
 
 .PHONY: reallyclean distclean
 reallyclean distclean: clean
-	rm -rf .config .venv .tox
+	rm -rf .config .tox
