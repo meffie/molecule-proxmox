@@ -204,52 +204,37 @@ To checkout the source code:
 
 .. code-block:: bash
 
-    $ git clone https://github.com/meffie/molecule-proxmox
-    $ cd molecule-proxmox
+    git clone https://github.com/meffie/molecule-proxmox
+    cd molecule-proxmox
 
-A `Makefile` and `tox.ini` are provided to facilitate development and testing.
-A Python virtualenv environment may be created with the `init` target.
-
-.. code-block:: bash
-
-    $ make init
-    $ source .venv/bin/activate
-
-Export the following shell environment variables to run the unit tests.
+Install `tox` with `pipx`, your system package manager, or create
+a virtualenv.
 
 .. code-block:: bash
 
-    # General
-    export TEST_PROXMOX_DEBUG="true"|"false"
+    pipx install tox
 
-    # Connection info:
-    export TEST_PROXMOX_HOST=<proxmox hostname>
-    export TEST_PROXMOX_PORT=<proxmox port>
-    export TEST_PROXMOX_USER=<username@realm>   # e.g. root@pam
-    export TEST_PROXMOX_PASSWORD=<password>
-    export TEST_PROXMOX_TOKEN_ID=<id>
-    export TEST_PROXMOX_TOKEN_SECRET=<secret>
-    export TEST_PROXMOX_SECRETS_FILE=<path to proxmox secrets yaml file>
-    export TEST_PROXMOX_SECRETS_SCRIPT=<path to proxmox secrets script file>
-    export TEST_PROXMOX_NODE=<proxmox node name>
-    export TEST_PROXMOX_SSH_USER=<username>
-    export TEST_PROXMOX_SSH_IDENTITY_FILE=<ssh key file for username>
+Copy the `envrc.sample` file to `.envrc` and edit the `.envrc` for your local
+proxmox site. Source the `.envrc` file to to export the environment variables
+to the current shell.
 
-    # Template id and names for unit tests:
-    export TEST_PROXMOX_TEMPLATE_VMID=<template vmid to be cloned in by-vmid scenario>
-    export TEST_PROXMOX_TEMPLATE_NAME=<template name to be cloned in by-name scenario>
-
-To run the unit tests in verbose mode:
+To run the tests with the latest supported molucule version:
 
 .. code-block:: bash
 
-    $ make test
+    tox -e latest
 
-To run the unit tests in quiet mode:
+To list the tox test environments
 
 .. code-block:: bash
 
-    $ make check
+    tox list
+
+To run tests with other versions:
+
+.. code-block:: bash
+
+    tox -e <testenv> -- [<pytest_options>]
 
 
 Authors
