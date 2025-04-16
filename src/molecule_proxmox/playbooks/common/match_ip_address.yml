@@ -14,8 +14,7 @@
       | reject(
         'match',
         '^(fe80:|127.|::|169.254.)'
-        )
-      | trim
+      )
       }}
   loop: "{{ vminfo.results }}"
   loop_control:
