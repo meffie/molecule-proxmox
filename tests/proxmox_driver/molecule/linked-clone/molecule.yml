@@ -10,10 +10,10 @@ driver:
     api_user: "${TEST_PROXMOX_USER}"
     api_password: "${TEST_PROXMOX_PASSWORD}"
     node: "${TEST_PROXMOX_NODE}"
-    full: "${TEST_PROXMOX_FULL_CLONE:-false}"
     ssh_user: "${TEST_PROXMOX_SSH_USER}"
     ssh_identity_file: "${TEST_PROXMOX_SSH_IDENTITY_FILE}"
     template_name: "${TEST_PROXMOX_TEMPLATE_NAME}"
+    full: "false"
     debug: "${TEST_PROXMOX_DEBUG}"
 
 platforms:
