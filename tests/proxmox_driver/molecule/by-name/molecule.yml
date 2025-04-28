@@ -12,6 +12,7 @@ driver:
     ssh_identity_file: "${TEST_PROXMOX_SSH_IDENTITY_FILE}"
     # Default template name. Defaults to 'molecule' if not set.
     template_name: "${TEST_PROXMOX_TEMPLATE_NAME}"
+    full: "${TEST_PROXMOX_FULL_CLONE:-true}"
     timeout: 120
     debug: "${TEST_PROXMOX_DEBUG}"
 
