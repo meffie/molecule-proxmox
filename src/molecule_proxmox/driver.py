@@ -51,6 +51,12 @@ class Proxmox(Driver):
     def __init__(self, config=None):
         super(Proxmox, self).__init__(config)
         self._name = "molecule-proxmox"
+        library_path = os.environ.get("ANSIBLE_LIBRARY", "")
+        if library_path:
+            library_path = self.modules_dir() + ":" + library_path
+        else:
+            library_path = self.modules_dir()
+        os.environ["ANSIBLE_LIBRARY"] = library_path
 
     @property
     def name(self):
