@@ -1,23 +1,21 @@
 import setuptools
-import re
-
-name = 'molecule-proxmox'
-description='Proxmox Molecule Plugin :: run molecule tests using proxmox'
-
-def find_version():
-    text = open('src/%s/__init__.py' % name.replace('-', '_')).read()
-    return re.search(r"__version__\s*=\s*'(.*)'", text).group(1)
 
 setuptools.setup(
-    name=name,
-    version=find_version(),
+    name='molecule-proxmox',
+    version='1.1.0',
     author='Michael Meffie',
     author_email='mmeffie@sinenomine.net',
-    description=description,
+    description='Proxmox Molecule Plugin :: run molecule tests using proxmox',
     long_description=open('README.rst').read(),
     long_description_content_type='text/x-rst',
     url='https://github.com/meffie/molecule-proxmox',
-    packages=setuptools.find_packages(where='src'),
+    packages=[
+        'molecule_proxmox',
+        'molecule_proxmox.cookiecutter',
+        'molecule_proxmox.modules',
+        'molecule_proxmox.playbooks',
+        'molecule_proxmox.playbooks.common',
+    ],
     package_dir={'': 'src'},
     include_package_data=True,
     entry_points={
