@@ -12,19 +12,12 @@ Requirements
 * Access to a `Proxmox VE`_ cluster
 * One or more virtual machine templates with required setup
 * Python package `proxmoxer`_
-* Ansible module `community.general.proxmox_kvm`_
+* Ansible module `community.proxmox.proxmox_kvm`_
 
 The required Python packages are automatically installed when
 ``molecule-proxmox`` is installed with ``pip``.
 
-The ``proxmox_kvm`` module is included with the Community.General collection
-and is automatically installed when Ansible is installed with ``pip``.
-
-If you choose to run a newer version of the ``community.general`` collection,
-be aware that Molecule Proxmox is not compatible with ``community.general``
-version >=10.7.0 due ``proxmox_kvm`` being moved to its own
-collection, ``community.proxmox``. These changes which will probably be
-picked up in Ansible 12 and, at that point, in Molecule Proxmox as well.
+The ``proxmox_kvm`` module is included in the ``community.proxmox`` collection.
 
 Virtual machine template requirements
 -------------------------------------
@@ -190,8 +183,7 @@ Finally, a configuration example with many features enabled:
      - name: test01
        newid: 1000
        template_name: debian11
-       # See https://docs.ansible.com/ansible/latest/collections/community/general/proxmox_kvm_module.html
-       # for cloud-init options.
+       # See proxmox_kvm module documentation for for cloud-init options.
        ciuser: some_user
        cipassword: some_password
        ipconfig:
@@ -250,8 +242,7 @@ License
 
 The `MIT`_ License.
 
-
 .. _`Proxmox VE`: https://www.proxmox.com/en/proxmox-ve
 .. _`proxmoxer`: https://pypi.org/project/proxmoxer/
-.. _`community.general.proxmox_kvm`: https://docs.ansible.com/ansible/11/collections/community/general/proxmox_kvm_module.html
+.. _`community.proxmox.proxmox_kvm`: https://docs.ansible.com/projects/ansible/latest/collections/community/proxmox/proxmox_module.html
 .. _`MIT`: https://github.com/molecule-proxmox/molecule-proxmox/blob/master/LICENSE
