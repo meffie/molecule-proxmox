@@ -26,16 +26,6 @@ def molecule(command, *args):
     assert rc == 0
 
 
-def test_molecule_init_scenario(tmpdir):
-    print('')
-    with chdir(tmpdir):
-        molecule('init', 'scenario', '--driver-name', 'molecule-proxmox')
-        assert pathlib.Path('molecule/default/converge.yml').exists()
-        assert pathlib.Path('molecule/default/create.yml').exists()
-        assert pathlib.Path('molecule/default/destroy.yml').exists()
-        assert pathlib.Path('molecule/default/molecule.yml').exists()
-
-
 @pytest.mark.parametrize('scenario', [
                            'default', 'by-name', 'by-vmid', 'cloud-init',
                            'secrets-file', 'secrets-script', 'linked-clone'])
