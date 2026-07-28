@@ -22,6 +22,7 @@
         vmid: "{{ p.proxmox_template_vmid | d(p.template_vmid, true) | d(omit, true) }}"
         clone: "{{ p.proxmox_template_name | d(p.template_name, true) | d(options.template_name, true) | d(p.box, true) | d('molecule', true) }}"
         name: "{{ p.name }}"
+        validate_certs: "{{ options.validate_certs | d(true) }}"
         node: "{{ options.node }}"
         full: "{{ options.full | d(omit) }}"
         timeout: "{{ options.timeout | d(omit) }}"
@@ -43,6 +44,7 @@
         api_password: "{{ api_password | d(options.api_password) | d(omit) }}"
         api_token_id: "{{ api_token_id | d(options.api_token_id) | d(omit) }}"
         api_token_secret: "{{ api_token_secret | d(options.api_token_secret) | d(omit) }}"
+        validate_certs: false
         vmid: "{{ rc.vmid }}"
         node: "{{ options.node }}"
         timeout: "{{ options.timeout | d(omit) }}"
@@ -76,6 +78,7 @@
         api_token_secret: "{{ api_token_secret | d(options.api_token_secret) | d(omit) }}"
         vmid: "{{ rc.vmid }}"
         timeout: "{{ options.timeout | d(omit) }}"
+        validate_certs: "{{ options.validate_certs | d(true) }}"
       loop: "{{ proxmox_clone.results }}"
       loop_control:
         loop_var: rc
@@ -91,6 +94,7 @@
           port: "{{ options.ssh_port | d(22) }}"
           identity_file: "{{ options.ssh_identity_file }}"
           vmid: "{{ ra.vmid }}"
+          validate_certs: "{{ options.validate_certs | d(true) }}"
       loop: "{{ proxmox_qemu_agent.results }}"
       loop_control:
         loop_var: ra

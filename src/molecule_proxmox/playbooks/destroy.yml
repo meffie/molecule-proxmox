@@ -36,6 +36,7 @@
         api_token_secret: "{{ api_token_secret | d(options.api_token_secret) | d(omit) }}"
         state: absent
         vmid: "{{ i.vmid }}"
+        validate_certs: "{{ options.validate_certs | d(true) }}"
         node: "{{ options.node }}"
         force: yes
         timeout: "{{ options.timeout | d(omit) }}"

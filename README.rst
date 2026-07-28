@@ -84,6 +84,8 @@ Examples
         api_token_id: "********"
         api_token_secret: "*******************************"
         api_timeout: 10
+        # Disable TLS validation for self-signed certs.
+        validate_certs: false
         node: pve01
         ssh_user: tester
         ssh_port: 22022             # default to 22
