@@ -254,4 +254,4 @@ The `MIT`_ License.
 .. _`Proxmox VE`: https://www.proxmox.com/en/proxmox-ve
 .. _`proxmoxer`: https://pypi.org/project/proxmoxer/
 .. _`community.general.proxmox_kvm`: https://docs.ansible.com/ansible/11/collections/community/general/proxmox_kvm_module.html
-.. _`MIT`: https://github.com/meffie/molecule-proxmox/blob/master/LICENSE
+.. _`MIT`: https://github.com/molecule-proxmox/molecule-proxmox/blob/master/LICENSE
